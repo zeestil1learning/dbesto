@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>d'BestO – Jagonya Rasa</title>
+  <link rel="stylesheet" href="style.css"/>
+  <style>
+    /* HERO */
+    .hero {
+      background: var(--cream);
+      min-height: calc(100vh - var(--nav-height) - 60px);
+      display: flex;
+      align-items: center;
+      position: relative;
+      overflow: hidden;
+      padding: 40px 40px 20px;
+    }
+    .hero-blob {
+      position: absolute;
+      top: -60px; left: -80px;
+      width: 420px; height: 420px;
+      background: var(--yellow);
+      border-radius: 60% 40% 55% 45% / 50% 60% 40% 50%;
+      z-index: 0;
+      opacity: 0.85;
+    }
+    .hero-blob2 {
+      position: absolute;
+      bottom: -40px; right: 380px;
+      width: 220px; height: 200px;
+      background: var(--yellow);
+      border-radius: 40% 60% 50% 50% / 60% 40% 60% 40%;
+      z-index: 0;
+      opacity: 0.55;
+    }
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      max-width: 440px;
+    }
+    .hero-content h1 {
+      font-family: 'Poppins', sans-serif;
+      font-size: 42px;
+      font-weight: 900;
+      line-height: 1.15;
+      margin-bottom: 16px;
+      color: var(--black);
+    }
+    .hero-content h1 span { color: var(--red); }
+    .hero-content p {
+      color: #555;
+      font-size: 15px;
+      margin-bottom: 28px;
+      font-weight: 600;
+      line-height: 1.5;
+    }
+    .hero-btns { display: flex; gap: 14px; flex-wrap: wrap; }
+    .hero-img {
+      position: absolute;
+      right: 0; top: 0; bottom: 0;
+      width: 55%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1;
+    }
+    .hero-img-bg {
+      position: absolute;
+      right: -30px;
+      width: 520px; height: 430px;
+      background: var(--yellow);
+      border-radius: 60% 40% 40% 60% / 50% 50% 50% 50%;
+    }
+    .hero-img img {
+      position: relative;
+      z-index: 2;
+      max-width: 520px;
+      max-height: 360px;
+      object-fit: contain;
+      drop-shadow: 0 10px 40px rgba(0,0,0,0.2);
+      animation: float 3.5s ease-in-out infinite;
+    }
+    @keyframes float {
+      0%,100% { transform: translateY(0); }
+      50% { transform: translateY(-14px); }
+    }
+    .halal-badge {
+      position: absolute;
+      top: 30px; right: 40px;
+      z-index: 10;
+      text-align: center;
+      background: var(--white);
+      border-radius: 50%;
+      width: 72px; height: 72px;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.10);
+    }
+    .halal-badge span { font-size: 9px; font-weight: 800; color: #7a5a00; }
+
+    /* FEATURES */
+    .features {
+      background: var(--white);
+      padding: 24px 40px;
+      display: flex;
+      justify-content: center;
+      gap: 0;
+    }
+    .feature-item {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      flex: 1;
+      padding: 12px 24px;
+      border-right: 1px solid #eee;
+    }
+    .feature-item:last-child { border-right: none; }
+    .feature-icon {
+      width: 50px; height: 50px;
+      background: var(--cream);
+      border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 24px;
+      flex-shrink: 0;
+    }
+    .feature-item h3 { font-size: 14px; font-weight: 800; margin-bottom: 3px; }
+    .feature-item p { font-size: 12px; color: #777; line-height: 1.4; }
+
+    /* PROMO BANNER */
+    .promo-banner {
+      margin: 28px 40px;
+      background: var(--black);
+      border-radius: var(--radius);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 20px 32px;
+      color: var(--white);
+      overflow: hidden;
+      position: relative;
+    }
+    .promo-badge {
+      color: var(--yellow);
+      font-size: 14px;
+      font-weight: 800;
+      margin-bottom: 6px;
+    }
+    .promo-title {
+      font-family: 'Poppins', sans-serif;
+      font-size: 22px;
+      font-weight: 800;
+    }
+    .promo-desc { font-size: 13px; color: #ccc; margin: 4px 0 8px; }
+    .promo-price { color: var(--yellow); font-size: 20px; font-weight: 900; }
+    .promo-price s { color: #888; font-size: 14px; margin-left: 8px; }
+    .promo-img {
+      height: 110px;
+      object-fit: contain;
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav>
+  <a class="nav-logo" href="index.html">
+    <img src="https://i.imgur.com/placeholder.png" onerror="this.style.display='none'" alt="d'BestO Logo"/>
+    <span>d'BestO</span>
+    <small style="font-size:10px;color:#888;font-weight:600;font-family:'Nunito',sans-serif;">Jagonya Rasa</small>
+  </a>
+  <ul class="nav-links">
+    <li><a href="index.html" class="active">Beranda</a></li>
+    <li><a href="menu.html">Menu</a></li>
+    <li><a href="promo.html">Promo</a></li>
+    <li><a href="order.html">Order</a></li>
+    <li><a href="feedback.html">Feedback</a></li>
+    <li><a href="tentang.html">Tentang Kami</a></li>
+  </ul>
+  <div class="nav-actions">
+    <a class="btn-login" href="login.html">Login</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-blob"></div>
+  <div class="hero-blob2"></div>
+  <div class="hero-content">
+    <h1>Ayam Crispy &<br><span>Burger Favoritmu!</span></h1>
+    <p>Nikmati kelezatan terbaik dengan bahan pilihan<br>dan harga bersahabat</p>
+    <div class="hero-btns">
+      <a class="btn-red" href="order.html">Order Sekarang</a>
+      <a class="btn-outline" href="menu.html">Lihat Menu</a>
+    </div>
+  </div>
+  <div class="hero-img">
+    <div class="hero-img-bg"></div>
+    <img src="https://i.imgur.com/QvtF3QO.png"
+         onerror="this.src='https://placehold.co/480x320/FFD600/1A1A1A?text=d%27BestO+Food'"
+         alt="d'BestO Food"/>
+  </div>
+  <div class="halal-badge">
+    <span style="font-size:18px;">☪</span>
+    <span>HALAL</span>
+    <span>INDONESIA</span>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<div class="features">
+  <div class="feature-item">
+    <div class="feature-icon">🍗</div>
+    <div>
+      <h3>Rasa Terbaik</h3>
+      <p>Bumbu khas dan bahan berkualitas tinggi</p>
+    </div>
+  </div>
+  <div class="feature-item">
+    <div class="feature-icon">🏷️</div>
+    <div>
+      <h3>Harga Bersahabat</h3>
+      <p>Nikmati menu lezat dengan harga terjangkau</p>
+    </div>
+  </div>
+  <div class="feature-item">
+    <div class="feature-icon">⚡</div>
+    <div>
+      <h3>Pelayanan Cepat</h3>
+      <p>Siap tersaji dengan cepat untukmu</p>
+    </div>
+  </div>
+</div>
+
+<!-- PROMO BANNER -->
+<div class="promo-banner">
+  <div>
+    <div class="promo-badge">🔥 Promo Spesial Minggu Ini</div>
+    <div class="promo-title">Paket Hemat 1</div>
+    <div class="promo-desc">Sayap + Paha Bawah + 2 Nasi + Orange + Lemon Tea</div>
+    <div class="promo-price">Rp28,000 <s>Rp36,500</s></div>
+  </div>
+  <img class="promo-img"
+    src="https://placehold.co/180x110/FFD600/1A1A1A?text=Paket+Hemat"
+    alt="Paket Hemat"/>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-info">
+    <div class="footer-item">
+      <span class="icon">📍</span>
+      <div>
+        <div class="label">Lokasi Outlet</div>
+        <a href="#" style="color:var(--red);font-size:12px;font-weight:700;">Lihat di Google Maps</a>
+      </div>
+    </div>
+    <div class="footer-item">
+      <span class="icon">🕐</span>
+      <div>
+        <div class="label">Jam Buka</div>
+        <div class="value">09.00 – 22.00 WITA<br/>Setiap Hari</div>
+      </div>
+    </div>
+    <div class="footer-item">
+      <span class="icon">📞</span>
+      <div>
+        <div class="label">Hubungi Kami</div>
+        <div class="value">0812-3456-7890</div>
+      </div>
+    </div>
+  </div>
+  <div class="footer-socials">
+    <a class="soc-ig" href="#">📷</a>
+    <a class="soc-wa" href="#">💬</a>
+    <a class="soc-fb" href="#">f</a>
+  </div>
+</footer>
+
+</body>
+</html>

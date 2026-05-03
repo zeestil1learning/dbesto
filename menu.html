@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Menu Kami – d'BestO</title>
+  <link rel="stylesheet" href="style.css"/>
+  <style>
+    .main { padding: 40px; max-width: 1100px; margin: 0 auto; }
+    .menu-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 22px;
+    }
+    .menu-card {
+      background: var(--white);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      transition: transform 0.2s, box-shadow 0.2s;
+      cursor: pointer;
+    }
+    .menu-card:hover { transform: translateY(-5px); box-shadow: 0 10px 30px rgba(0,0,0,0.13); }
+    .menu-card h3 { font-size: 15px; font-weight: 800; margin-bottom: 2px; }
+    .menu-card .price { font-size: 14px; font-weight: 700; color: #444; margin-bottom: 12px; }
+    .menu-card img {
+      width: 100%; height: 150px;
+      object-fit: cover;
+      border-radius: 10px;
+      margin-bottom: 14px;
+      background: var(--gray);
+    }
+    .btn-tambah {
+      width: 100%;
+      background: var(--red);
+      color: var(--white);
+      border: none;
+      border-radius: 30px;
+      padding: 11px;
+      font-family: 'Nunito', sans-serif;
+      font-weight: 800;
+      font-size: 14px;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.1s;
+      margin-top: auto;
+    }
+    .btn-tambah:hover { background: var(--red-dark); transform: scale(1.03); }
+
+    /* Cart Float */
+    .cart-float {
+      position: fixed;
+      bottom: 28px; right: 28px;
+      background: var(--red);
+      color: var(--white);
+      border-radius: 50%;
+      width: 62px; height: 62px;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      box-shadow: 0 6px 24px rgba(224,32,32,0.4);
+      font-size: 26px;
+      cursor: pointer;
+      z-index: 200;
+      text-decoration: none;
+      transition: transform 0.2s;
+    }
+    .cart-float:hover { transform: scale(1.1); }
+    .cart-float .count {
+      position: absolute;
+      top: 4px; right: 4px;
+      background: var(--yellow);
+      color: var(--black);
+      border-radius: 50%;
+      width: 20px; height: 20px;
+      font-size: 11px;
+      font-weight: 900;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .toast {
+      position: fixed;
+      bottom: 100px; right: 28px;
+      background: var(--black);
+      color: var(--white);
+      padding: 10px 22px;
+      border-radius: 30px;
+      font-weight: 700;
+      font-size: 14px;
+      z-index: 300;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.3s, transform 0.3s;
+    }
+    .toast.show { opacity: 1; transform: translateY(0); }
+  </style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav>
+  <a class="nav-logo" href="index.html">
+    <span style="font-family:'Poppins',sans-serif;font-weight:900;font-size:22px;color:var(--black);">d'Best<span style="color:var(--red);">O</span></span>
+    <small style="font-size:10px;color:#888;font-weight:600;">Jagonya Rasa</small>
+  </a>
+  <ul class="nav-links">
+    <li><a href="index.html">Beranda</a></li>
+    <li><a href="menu.html" class="active">Menu</a></li>
+    <li><a href="promo.html">Promo</a></li>
+    <li><a href="order.html">Order</a></li>
+    <li><a href="feedback.html">Feedback</a></li>
+    <li><a href="tentang.html">Tentang Kami</a></li>
+  </ul>
+  <div class="nav-actions">
+    <a class="cart-icon" href="order.html">
+      🛒<span class="cart-badge" id="navCartBadge">0</span>
+    </a>
+    <a class="user-icon" href="login.html">👤</a>
+  </div>
+</nav>
+
+<div class="main">
+  <h2 class="section-title">Menu Kami</h2>
+  <div class="section-underline"></div>
+
+  <!-- Filter Tabs -->
+  <div class="filter-tabs" id="filterTabs">
+    <button class="filter-tab active" data-cat="semua">Semua</button>
+    <button class="filter-tab" data-cat="ayam">Ayam</button>
+    <button class="filter-tab" data-cat="burger">Burger</button>
+    <button class="filter-tab" data-cat="chikenbox">Chiken Box</button>
+    <button class="filter-tab" data-cat="minuman">Minuman</button>
+    <button class="filter-tab" data-cat="chikenshake">Chiken Shake</button>
+    <button class="filter-tab" data-cat="snack">Snack Dish</button>
+    <button class="filter-tab" data-cat="new">New Produk</button>
+  </div>
+
+  <!-- Menu Grid -->
+  <div class="menu-grid" id="menuGrid"></div>
+</div>
+
+<!-- Cart Float -->
+<a class="cart-float" href="order.html">
+  🛒
+  <span class="count" id="cartCount">0</span>
+</a>
+
+<div class="toast" id="toast">Ditambahkan ke keranjang!</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-info">
+    <div class="footer-item">
+      <span class="icon">📍</span>
+      <div><div class="label">Lokasi Outlet</div><a href="#" style="color:var(--red);font-size:12px;font-weight:700;">Lihat di Google Maps</a></div>
+    </div>
+    <div class="footer-item">
+      <span class="icon">🕐</span>
+      <div><div class="label">Jam Buka</div><div class="value">09.00 – 22.00 WITA<br/>Setiap Hari</div></div>
+    </div>
+    <div class="footer-item">
+      <span class="icon">📞</span>
+      <div><div class="label">Hubungi Kami</div><div class="value">0812-3456-7890</div></div>
+    </div>
+  </div>
+  <div class="footer-socials">
+    <a class="soc-ig" href="#">📷</a>
+    <a class="soc-wa" href="#">💬</a>
+    <a class="soc-fb" href="#">f</a>
+  </div>
+</footer>
+
+<script>
+const menuData = [
+  { id:1, name:'DADA', price:12000, cat:'ayam', img:'https://placehold.co/220x150/FFD600/1A1A1A?text=DADA' },
+  { id:2, name:'Kunyah Lada Hitam', price:11000, cat:'chikenbox', img:'https://placehold.co/220x150/FFD600/1A1A1A?text=Lada+Hitam' },
+  { id:3, name:'Honey Chicken', price:12500, cat:'burger', img:'https://placehold.co/220x150/FFD600/1A1A1A?text=Honey+Chicken' },
+  { id:4, name:'Paha Atas MOZZADAS', price:20000, cat:'ayam', img:'https://placehold.co/220x150/FFD600/1A1A1A?text=MOZZADAS' },
+  { id:5, name:'Sapi Panggang Large', price:19500, cat:'burger', img:'https://placehold.co/220x150/FFD600/1A1A1A?text=Sapi+Panggang' },
+  { id:6, name:'Chicken Extra', price:73000, cat:'ayam', img:'https://placehold.co/220x150/FFD600/1A1A1A?text=Chicken+Extra' },
+  { id:7, name:'Choco Float', price:11000, cat:'minuman', img:'https://placehold.co/220x150/FFD600/1A1A1A?text=Choco+Float' },
+  { id:8, name:'Sayap SADAS', price:10500, cat:'ayam', img:'https://placehold.co/220x150/FFD600/1A1A1A?text=Sayap+SADAS' },
+  { id:9, name:'Apple Flazz', price:8500, cat:'minuman', img:'https://placehold.co/220x150/FFD600/1A1A1A?text=Apple+Flazz' },
+  { id:10, name:'Premium BUDAS', price:18000, cat:'burger', img:'https://placehold.co/220x150/FFD600/1A1A1A?text=Premium+BUDAS' },
+  { id:11, name:'Chicken Box Lada Hitam', price:13500, cat:'chikenbox', img:'https://placehold.co/220x150/FFD600/1A1A1A?text=ChikenBox+LH' },
+  { id:12, name:'Lemon Tea', price:7000, cat:'minuman', img:'https://placehold.co/220x150/FFD600/1A1A1A?text=Lemon+Tea' },
+  { id:13, name:'Waffle Fries', price:14000, cat:'snack', img:'https://placehold.co/220x150/FFD600/1A1A1A?text=Waffle+Fries' },
+  { id:14, name:'Chiken Shake Pedas', price:35490, cat:'chikenshake', img:'https://placehold.co/220x150/FFD600/1A1A1A?text=Chiken+Shake' },
+  { id:15, name:'Paha Bawah Crispy', price:11000, cat:'ayam', img:'https://placehold.co/220x150/FFD600/1A1A1A?text=Paha+Bawah' },
+  { id:16, name:'Orange Juice', price:9000, cat:'minuman', img:'https://placehold.co/220x150/FFD600/1A1A1A?text=Orange+Juice' },
+];
+
+let cart = JSON.parse(localStorage.getItem('dbesto_cart') || '[]');
+let activeCat = 'semua';
+
+function updateCartBadge() {
+  const total = cart.reduce((a,b) => a + b.qty, 0);
+  document.getElementById('cartCount').textContent = total;
+  document.getElementById('navCartBadge').textContent = total;
+}
+
+function renderMenu() {
+  const grid = document.getElementById('menuGrid');
+  const filtered = activeCat === 'semua' ? menuData : menuData.filter(m => m.cat === activeCat);
+  grid.innerHTML = filtered.map(item => `
+    <div class="menu-card">
+      <h3>${item.name}</h3>
+      <div class="price">Rp${item.price.toLocaleString('id')}</div>
+      <img src="${item.img}" alt="${item.name}" onerror="this.src='https://placehold.co/220x150/eee/999?text=No+Image'"/>
+      <button class="btn-tambah" onclick="addToCart(${item.id})">+ Tambah</button>
+    </div>
+  `).join('');
+}
+
+function addToCart(id) {
+  const item = menuData.find(m => m.id === id);
+  const existing = cart.find(c => c.id === id);
+  if (existing) existing.qty++;
+  else cart.push({ ...item, qty: 1 });
+  localStorage.setItem('dbesto_cart', JSON.stringify(cart));
+  updateCartBadge();
+  showToast();
+}
+
+function showToast() {
+  const t = document.getElementById('toast');
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2000);
+}
+
+// Filter tabs
+document.getElementById('filterTabs').addEventListener('click', e => {
+  if (e.target.classList.contains('filter-tab')) {
+    document.querySelectorAll('.filter-tab').forEach(b => b.classList.remove('active'));
+    e.target.classList.add('active');
+    activeCat = e.target.dataset.cat;
+    renderMenu();
+  }
+});
+
+renderMenu();
+updateCartBadge();
+</script>
+</body>
+</html>

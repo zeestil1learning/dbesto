@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Feedback – d'BestO</title>
+  <link rel="stylesheet" href="style.css"/>
+  <style>
+    .main { padding: 40px; max-width: 1100px; margin: 0 auto; }
+    .page-title { font-size: 22px; font-weight: 900; font-family:'Poppins',sans-serif; margin-bottom: 28px; }
+    .page-title span { margin-right: 8px; }
+
+    .feedback-layout {
+      display: grid;
+      grid-template-columns: 1.1fr 1fr;
+      gap: 28px;
+      align-items: start;
+    }
+
+    /* Form */
+    .feedback-form-box {
+      background: var(--white);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 28px;
+    }
+    .feedback-form-box h3 { font-size: 16px; font-weight: 800; margin-bottom: 20px; }
+    .form-group { margin-bottom: 18px; }
+    .form-group label { display: block; font-weight: 700; font-size: 13px; margin-bottom: 7px; color: #444; }
+    .form-group input, .form-group textarea {
+      width: 100%; border: 1.5px solid #ddd; border-radius: 10px;
+      padding: 12px 14px; font-family: 'Nunito', sans-serif; font-size: 14px;
+      font-weight: 600; color: var(--text); outline: none; transition: border-color 0.2s;
+      resize: none;
+    }
+    .form-group input:focus, .form-group textarea:focus { border-color: var(--yellow); }
+    .form-group textarea { height: 120px; }
+    .star-rating { display: flex; gap: 8px; margin-top: 4px; }
+    .star-rating .star {
+      font-size: 32px; cursor: pointer;
+      color: #ddd; transition: color 0.15s, transform 0.15s;
+      user-select: none;
+    }
+    .star-rating .star.active { color: var(--yellow); }
+    .star-rating .star:hover { transform: scale(1.2); }
+    .btn-kirim {
+      background: var(--red); color: var(--white); border: none;
+      border-radius: 12px; padding: 14px 36px;
+      font-family: 'Nunito', sans-serif; font-weight: 800; font-size: 16px;
+      cursor: pointer; transition: background 0.2s, transform 0.1s;
+      float: right;
+    }
+    .btn-kirim:hover { background: var(--red-dark); transform: scale(1.03); }
+
+    /* Reviews */
+    .reviews-box {
+      background: var(--white);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 28px;
+    }
+    .reviews-box h3 { font-size: 16px; font-weight: 800; margin-bottom: 20px; }
+    .review-card {
+      border: 1.5px solid #f0f0f0;
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 14px;
+      transition: box-shadow 0.2s;
+    }
+    .review-card:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.08); }
+    .review-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+    .review-user { display: flex; align-items: center; gap: 10px; }
+    .review-avatar {
+      width: 32px; height: 32px;
+      background: var(--gray); border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 16px;
+    }
+    .review-name { font-weight: 800; font-size: 14px; }
+    .review-stars { display: flex; gap: 2px; font-size: 15px; }
+    .review-stars .s { color: #ddd; }
+    .review-stars .s.active { color: var(--yellow); }
+    .review-text { font-size: 13px; color: #555; margin-bottom: 6px; line-height: 1.5; }
+    .review-date { font-size: 11px; color: #bbb; text-align: right; }
+
+    .success-toast {
+      position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%) translateY(40px);
+      background: #22c55e; color: var(--white);
+      padding: 14px 32px; border-radius: 30px; font-weight: 800; font-size: 15px;
+      z-index: 300; opacity: 0; transition: opacity 0.3s, transform 0.3s;
+      box-shadow: 0 6px 24px rgba(34,197,94,0.3);
+    }
+    .success-toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-logo" href="index.html">
+    <span style="font-family:'Poppins',sans-serif;font-weight:900;font-size:22px;color:var(--black);">d'Best<span style="color:var(--red);">O</span></span>
+    <small style="font-size:10px;color:#888;font-weight:600;">Jagonya Rasa</small>
+  </a>
+  <ul class="nav-links">
+    <li><a href="index.html">Beranda</a></li>
+    <li><a href="menu.html">Menu</a></li>
+    <li><a href="promo.html">Promo</a></li>
+    <li><a href="order.html">Order</a></li>
+    <li><a href="feedback.html" class="active">Feedback</a></li>
+    <li><a href="tentang.html">Tentang Kami</a></li>
+  </ul>
+  <div class="nav-actions">
+    <a class="cart-icon" href="order.html">🛒<span class="cart-badge" id="navCartBadge">0</span></a>
+    <a class="user-icon" href="login.html">👤</a>
+  </div>
+</nav>
+
+<div class="main">
+  <div class="page-title"><span>⭐</span>Feedback Pelanggan</div>
+  <div class="feedback-layout">
+    <!-- Form -->
+    <div class="feedback-form-box">
+      <h3>Kirimkan Feedback</h3>
+      <div class="form-group">
+        <label>Nama Lengkap</label>
+        <input type="text" id="nama" placeholder="Masukan nama"/>
+      </div>
+      <div class="form-group">
+        <label>Pesan</label>
+        <textarea id="pesan" placeholder="Tulis pesan anda..."></textarea>
+      </div>
+      <div class="form-group">
+        <label>Rating</label>
+        <div class="star-rating" id="starRating">
+          <span class="star" data-v="1">★</span>
+          <span class="star" data-v="2">★</span>
+          <span class="star" data-v="3">★</span>
+          <span class="star" data-v="4">★</span>
+          <span class="star" data-v="5">★</span>
+        </div>
+      </div>
+      <button class="btn-kirim" onclick="submitFeedback()">Kirim</button>
+    </div>
+
+    <!-- Reviews -->
+    <div class="reviews-box">
+      <h3>Ulasan Pelanggan</h3>
+      <div id="reviewList"></div>
+    </div>
+  </div>
+</div>
+
+<div class="success-toast" id="successToast">✅ Feedback berhasil dikirim!</div>
+
+<footer>
+  <div class="footer-info">
+    <div class="footer-item"><span class="icon">📍</span><div><div class="label">Lokasi Outlet</div><a href="#" style="color:var(--red);font-size:12px;font-weight:700;">Lihat di Google Maps</a></div></div>
+    <div class="footer-item"><span class="icon">🕐</span><div><div class="label">Jam Buka</div><div class="value">09.00 – 22.00 WITA<br/>Setiap Hari</div></div></div>
+    <div class="footer-item"><span class="icon">📞</span><div><div class="label">Hubungi Kami</div><div class="value">0812-3456-7890</div></div></div>
+  </div>
+  <div class="footer-socials">
+    <a class="soc-ig" href="#">📷</a><a class="soc-wa" href="#">💬</a><a class="soc-fb" href="#">f</a>
+  </div>
+</footer>
+
+<script>
+let selectedRating = 3;
+const months = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
+
+let reviews = JSON.parse(localStorage.getItem('dbesto_reviews') || 'null') || [
+  { name: 'Kim Jong Un', rating: 5, text: 'Ayamnya Enak! Cocok dibuka di korea utara!', date: '3 April 2026' },
+  { name: 'Taylor Swift', rating: 4, text: 'Burgernya enak banget, Recommended!', date: '15 Mei 2026' },
+  { name: 'Nanami Kento', rating: 4, text: 'Harga terjangkau dan porsinya memuaskan.', date: '20 Juni 2026' },
+];
+
+// Star rating
+const stars = document.querySelectorAll('.star');
+function setRating(v) {
+  selectedRating = v;
+  stars.forEach(s => {
+    s.classList.toggle('active', parseInt(s.dataset.v) <= v);
+  });
+}
+setRating(3);
+stars.forEach(s => {
+  s.addEventListener('click', () => setRating(parseInt(s.dataset.v)));
+  s.addEventListener('mouseenter', () => {
+    const v = parseInt(s.dataset.v);
+    stars.forEach(st => st.classList.toggle('active', parseInt(st.dataset.v) <= v));
+  });
+});
+document.getElementById('starRating').addEventListener('mouseleave', () => setRating(selectedRating));
+
+function renderReviews() {
+  const list = document.getElementById('reviewList');
+  list.innerHTML = reviews.map(r => `
+    <div class="review-card">
+      <div class="review-header">
+        <div class="review-user">
+          <div class="review-avatar">👤</div>
+          <div class="review-name">${r.name}</div>
+        </div>
+        <div class="review-stars">
+          ${[1,2,3,4,5].map(i => `<span class="s ${i <= r.rating ? 'active' : ''}">★</span>`).join('')}
+        </div>
+      </div>
+      <div class="review-text">${r.text}</div>
+      <div class="review-date">${r.date}</div>
+    </div>
+  `).join('');
+}
+
+function submitFeedback() {
+  const nama = document.getElementById('nama').value.trim();
+  const pesan = document.getElementById('pesan').value.trim();
+  if (!nama) { alert('Nama harus diisi!'); return; }
+  if (!pesan) { alert('Pesan harus diisi!'); return; }
+
+  const now = new Date();
+  const date = `${now.getDate()} ${months[now.getMonth()]} ${now.getFullYear()}`;
+  reviews.unshift({ name: nama, rating: selectedRating, text: pesan, date });
+  localStorage.setItem('dbesto_reviews', JSON.stringify(reviews));
+  renderReviews();
+
+  document.getElementById('nama').value = '';
+  document.getElementById('pesan').value = '';
+  setRating(3);
+
+  const t = document.getElementById('successToast');
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+// Cart badge
+const cart = JSON.parse(localStorage.getItem('dbesto_cart') || '[]');
+document.getElementById('navCartBadge').textContent = cart.reduce((a,b)=>a+b.qty,0);
+
+renderReviews();
+</script>
+</body>
+</html>

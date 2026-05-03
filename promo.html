@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Promo – d'BestO</title>
+  <link rel="stylesheet" href="style.css"/>
+  <style>
+    .main { padding: 40px; max-width: 1100px; margin: 0 auto; }
+    .promo-hero {
+      background: var(--black);
+      border-radius: var(--radius);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 24px 36px;
+      color: var(--white);
+      margin-bottom: 32px;
+      overflow: hidden;
+      position: relative;
+    }
+    .promo-hero::before {
+      content: '';
+      position: absolute;
+      right: 200px; top: -40px;
+      width: 160px; height: 160px;
+      background: rgba(255,214,0,0.07);
+      border-radius: 50%;
+    }
+    .promo-badge { color: var(--yellow); font-size: 14px; font-weight: 800; margin-bottom: 8px; }
+    .promo-title { font-family: 'Poppins',sans-serif; font-size: 26px; font-weight: 900; }
+    .promo-desc { font-size: 14px; color: #ccc; margin: 6px 0 10px; }
+    .promo-price { color: var(--yellow); font-size: 22px; font-weight: 900; }
+    .promo-price s { color: #888; font-size: 15px; margin-left: 8px; }
+    .promo-hero img { height: 120px; object-fit: contain; }
+
+    .promo-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+      gap: 22px;
+    }
+    .promo-card {
+      background: var(--white);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .promo-card:hover { transform: translateY(-5px); box-shadow: 0 10px 30px rgba(0,0,0,0.13); }
+    .promo-card img { width: 100%; height: 160px; object-fit: cover; display: block; }
+    .promo-card-body { padding: 14px 16px 16px; }
+    .promo-card-body h3 { font-size: 15px; font-weight: 800; margin-bottom: 4px; }
+    .promo-card-body .desc { font-size: 12px; color: #777; margin-bottom: 10px; line-height: 1.4; }
+    .promo-card-body .price-row { display: flex; align-items: center; gap: 8px; margin-bottom: 14px; }
+    .price-new { background: var(--red); color: var(--white); font-size: 14px; font-weight: 800; padding: 4px 12px; border-radius: 20px; }
+    .price-old { color: #bbb; text-decoration: line-through; font-size: 13px; }
+    .btn-tambah {
+      width: 100%;
+      background: var(--red);
+      color: var(--white);
+      border: none;
+      border-radius: 30px;
+      padding: 11px;
+      font-family: 'Nunito', sans-serif;
+      font-weight: 800;
+      font-size: 14px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .btn-tambah:hover { background: var(--red-dark); }
+
+    .cart-float {
+      position: fixed; bottom: 28px; right: 28px;
+      background: var(--red); color: var(--white);
+      border-radius: 50%; width: 62px; height: 62px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 26px; box-shadow: 0 6px 24px rgba(224,32,32,0.4);
+      cursor: pointer; z-index: 200; text-decoration: none;
+      transition: transform 0.2s; position: fixed;
+    }
+    .cart-float:hover { transform: scale(1.1); }
+    .cart-float .count {
+      position: absolute; top: 4px; right: 4px;
+      background: var(--yellow); color: var(--black);
+      border-radius: 50%; width: 20px; height: 20px;
+      font-size: 11px; font-weight: 900;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .toast {
+      position: fixed; bottom: 100px; right: 28px;
+      background: var(--black); color: var(--white);
+      padding: 10px 22px; border-radius: 30px; font-weight: 700; font-size: 14px;
+      z-index: 300; opacity: 0; transform: translateY(20px);
+      transition: opacity 0.3s, transform 0.3s;
+    }
+    .toast.show { opacity: 1; transform: translateY(0); }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-logo" href="index.html">
+    <span style="font-family:'Poppins',sans-serif;font-weight:900;font-size:22px;color:var(--black);">d'Best<span style="color:var(--red);">O</span></span>
+    <small style="font-size:10px;color:#888;font-weight:600;">Jagonya Rasa</small>
+  </a>
+  <ul class="nav-links">
+    <li><a href="index.html">Beranda</a></li>
+    <li><a href="menu.html">Menu</a></li>
+    <li><a href="promo.html" class="active">Promo</a></li>
+    <li><a href="order.html">Order</a></li>
+    <li><a href="feedback.html">Feedback</a></li>
+    <li><a href="tentang.html">Tentang Kami</a></li>
+  </ul>
+  <div class="nav-actions">
+    <a class="cart-icon" href="order.html">🛒<span class="cart-badge" id="navCartBadge">0</span></a>
+    <a class="user-icon" href="login.html">👤</a>
+  </div>
+</nav>
+
+<div class="main">
+  <h2 class="section-title">Promo</h2>
+  <div class="section-underline"></div>
+
+  <div class="filter-tabs" id="filterTabs">
+    <button class="filter-tab active" data-cat="semua">Semua</button>
+    <button class="filter-tab" data-cat="hemat">Paket Hemat</button>
+    <button class="filter-tab" data-cat="nasi">Paket Nasi</button>
+    <button class="filter-tab" data-cat="combo">Paket Combo</button>
+    <button class="filter-tab" data-cat="kids">Combo Kids</button>
+  </div>
+
+  <!-- Featured Promo -->
+  <div class="promo-hero">
+    <div>
+      <div class="promo-badge">🔥 Promo Spesial Minggu Ini</div>
+      <div class="promo-title">Paket Hemat 1</div>
+      <div class="promo-desc">Sayap + Paha Bawah + 2 Nasi + Orange + Lemon Tea</div>
+      <div class="promo-price">Rp28,000 <s>Rp36,500</s></div>
+    </div>
+    <img src="https://placehold.co/180x120/FFD600/1A1A1A?text=Paket+Hemat+1" alt="Paket Hemat 1"/>
+  </div>
+
+  <!-- Promo Grid -->
+  <div class="promo-grid" id="promoGrid"></div>
+</div>
+
+<a class="cart-float" href="order.html" style="position:fixed;">
+  🛒<span class="count" id="cartCount">0</span>
+</a>
+<div class="toast" id="toast">Ditambahkan ke keranjang!</div>
+
+<footer>
+  <div class="footer-info">
+    <div class="footer-item"><span class="icon">📍</span><div><div class="label">Lokasi Outlet</div><a href="#" style="color:var(--red);font-size:12px;font-weight:700;">Lihat di Google Maps</a></div></div>
+    <div class="footer-item"><span class="icon">🕐</span><div><div class="label">Jam Buka</div><div class="value">09.00 – 22.00 WITA<br/>Setiap Hari</div></div></div>
+    <div class="footer-item"><span class="icon">📞</span><div><div class="label">Hubungi Kami</div><div class="value">0812-3456-7890</div></div></div>
+  </div>
+  <div class="footer-socials">
+    <a class="soc-ig" href="#">📷</a><a class="soc-wa" href="#">💬</a><a class="soc-fb" href="#">f</a>
+  </div>
+</footer>
+
+<script>
+const promos = [
+  { id:101, name:'Combo CLBK 1', desc:'Sayap CLBK + Nasi + Choco Float', priceNew:21000, priceOld:25000, cat:'combo', img:'https://placehold.co/230x160/FFD600/1A1A1A?text=Combo+CLBK+1' },
+  { id:102, name:'Combo Kids 2', desc:'Sayap CLBK + Nasi + Choco Float', priceNew:18500, priceOld:null, cat:'kids', img:'https://placehold.co/230x160/FFD600/1A1A1A?text=Combo+Kids+2' },
+  { id:103, name:'2 Extra Pedas Large Chiken Shake', desc:'Diskon 9%', priceNew:35490, priceOld:39000, cat:'hemat', img:'https://placehold.co/230x160/FFD600/1A1A1A?text=Chiken+Shake' },
+  { id:104, name:'Combo 3', desc:'Premium Cheese Burger + Orange', priceNew:23000, priceOld:null, cat:'combo', img:'https://placehold.co/230x160/FFD600/1A1A1A?text=Combo+3' },
+  { id:105, name:'Paket Nasi Ayam', desc:'1 Potong Ayam + Nasi + Air Mineral', priceNew:15000, priceOld:19000, cat:'nasi', img:'https://placehold.co/230x160/FFD600/1A1A1A?text=Paket+Nasi' },
+  { id:106, name:'Paket Hemat 2', desc:'2 Sayap + 2 Nasi + 2 Minuman', priceNew:32000, priceOld:40000, cat:'hemat', img:'https://placehold.co/230x160/FFD600/1A1A1A?text=Paket+Hemat+2' },
+  { id:107, name:'Combo Kids 1', desc:'1 Dada + Nasi + Juice Box', priceNew:16500, priceOld:20000, cat:'kids', img:'https://placehold.co/230x160/FFD600/1A1A1A?text=Combo+Kids+1' },
+  { id:108, name:'Paket Nasi Keluarga', desc:'4 Ayam + 4 Nasi + 4 Minuman', priceNew:75000, priceOld:90000, cat:'nasi', img:'https://placehold.co/230x160/FFD600/1A1A1A?text=Keluarga' },
+];
+
+let cart = JSON.parse(localStorage.getItem('dbesto_cart') || '[]');
+let activeCat = 'semua';
+
+function updateCartBadge() {
+  const total = cart.reduce((a,b) => a + b.qty, 0);
+  document.getElementById('cartCount').textContent = total;
+  document.getElementById('navCartBadge').textContent = total;
+}
+
+function renderPromos() {
+  const grid = document.getElementById('promoGrid');
+  const filtered = activeCat === 'semua' ? promos : promos.filter(p => p.cat === activeCat);
+  grid.innerHTML = filtered.map(p => `
+    <div class="promo-card">
+      <img src="${p.img}" alt="${p.name}" onerror="this.src='https://placehold.co/230x160/eee/999?text=No+Image'"/>
+      <div class="promo-card-body">
+        <h3>${p.name}</h3>
+        <div class="desc">${p.desc}</div>
+        <div class="price-row">
+          <span class="price-new">Rp${p.priceNew.toLocaleString('id')}</span>
+          ${p.priceOld ? `<span class="price-old">Rp${p.priceOld.toLocaleString('id')}</span>` : ''}
+        </div>
+        <button class="btn-tambah" onclick="addToCart(${p.id})">+ Tambah</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+function addToCart(id) {
+  const item = promos.find(p => p.id === id);
+  const existing = cart.find(c => c.id === id);
+  if (existing) existing.qty++;
+  else cart.push({ id: item.id, name: item.name, price: item.priceNew, qty: 1 });
+  localStorage.setItem('dbesto_cart', JSON.stringify(cart));
+  updateCartBadge();
+  const t = document.getElementById('toast');
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2000);
+}
+
+document.getElementById('filterTabs').addEventListener('click', e => {
+  if (e.target.classList.contains('filter-tab')) {
+    document.querySelectorAll('.filter-tab').forEach(b => b.classList.remove('active'));
+    e.target.classList.add('active');
+    activeCat = e.target.dataset.cat;
+    renderPromos();
+  }
+});
+
+renderPromos();
+updateCartBadge();
+</script>
+</body>
+</html>

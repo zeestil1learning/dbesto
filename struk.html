@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Struk Pemesanan – d'BestO</title>
+  <link rel="stylesheet" href="style.css"/>
+  <style>
+    .main { padding: 40px; max-width: 600px; margin: 0 auto; }
+    .struk {
+      background: var(--white);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 40px 36px;
+      text-align: center;
+    }
+    .struk-logo {
+      font-family: 'Poppins', sans-serif;
+      font-size: 28px; font-weight: 900;
+      margin-bottom: 4px;
+    }
+    .struk-logo span { color: var(--red); }
+    .struk-sub { font-size: 12px; color: var(--gray-mid); margin-bottom: 16px; }
+    .struk-title {
+      background: var(--yellow);
+      border-radius: 8px;
+      padding: 8px 24px;
+      font-family: 'Poppins', sans-serif;
+      font-size: 18px; font-weight: 900;
+      letter-spacing: 1px;
+      display: inline-block;
+      margin-bottom: 20px;
+    }
+    .struk-branch {
+      font-size: 14px; font-weight: 700; color: var(--black);
+      margin-bottom: 4px;
+    }
+    .struk-address { font-size: 13px; color: #777; line-height: 1.5; margin-bottom: 20px; }
+
+    .struk-info {
+      border-top: 1px dashed #ddd;
+      border-bottom: 1px dashed #ddd;
+      padding: 16px 0;
+      text-align: left;
+      margin-bottom: 16px;
+    }
+    .info-row {
+      display: flex; justify-content: space-between; align-items: flex-start;
+      margin-bottom: 8px;
+    }
+    .info-row:last-child { margin-bottom: 0; }
+    .info-row .key { font-size: 14px; color: #666; font-weight: 600; }
+    .info-row .val { font-size: 14px; font-weight: 700; }
+    .info-row .val.order-no { color: var(--red); }
+
+    .btn-detail {
+      background: var(--yellow); color: var(--black);
+      border: none; border-radius: 8px; padding: 10px 22px;
+      font-family: 'Nunito', sans-serif; font-weight: 800; font-size: 14px;
+      cursor: pointer; text-align: left; width: 100%;
+      margin-bottom: 16px;
+      transition: background 0.2s;
+    }
+    .btn-detail:hover { background: var(--yellow-dark); }
+    .detail-panel { display: none; text-align: left; margin-bottom: 16px; }
+    .detail-panel.show { display: block; }
+    .detail-item {
+      display: flex; justify-content: space-between;
+      padding: 8px 0; border-bottom: 1px solid #f5f5f5; font-size: 13px;
+    }
+    .detail-item .d-name { color: #444; font-weight: 600; }
+    .detail-item .d-price { font-weight: 800; }
+
+    .struk-calc { text-align: left; margin-bottom: 16px; }
+    .calc-row { display: flex; justify-content: space-between; padding: 6px 0; font-size: 14px; }
+    .calc-row .lbl { color: #666; font-weight: 600; }
+    .calc-row .val { font-weight: 700; }
+    .calc-row .discount { color: var(--red); }
+
+    .struk-total {
+      display: flex; justify-content: space-between; align-items: center;
+      border-top: 2px solid var(--black); padding-top: 14px; margin-bottom: 20px;
+    }
+    .struk-total .lbl { font-family:'Poppins',sans-serif; font-size: 18px; font-weight: 900; }
+    .struk-total .amount {
+      background: var(--yellow); padding: 8px 18px;
+      border-radius: 8px;
+      font-family:'Poppins',sans-serif; font-size: 18px; font-weight: 900;
+    }
+
+    .struk-thankyou {
+      background: var(--red); color: var(--white);
+      border-radius: 10px; padding: 14px 20px;
+      display: flex; align-items: center; justify-content: center;
+      gap: 12px; font-weight: 800; font-size: 14px;
+    }
+    .struk-thankyou span { font-size: 24px; }
+
+    .print-btn {
+      margin-top: 20px;
+      background: var(--black); color: var(--white);
+      border: none; border-radius: 10px; padding: 12px 28px;
+      font-family: 'Nunito', sans-serif; font-weight: 800; font-size: 15px;
+      cursor: pointer; width: 100%;
+      transition: background 0.2s;
+    }
+    .print-btn:hover { background: #333; }
+    @media print {
+      nav, footer, .print-btn { display: none !important; }
+      .main { max-width: 100%; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-logo" href="index.html">
+    <span style="font-family:'Poppins',sans-serif;font-weight:900;font-size:22px;color:var(--black);">d'Best<span style="color:var(--red);">O</span></span>
+    <small style="font-size:10px;color:#888;font-weight:600;">Jagonya Rasa</small>
+  </a>
+  <ul class="nav-links">
+    <li><a href="index.html">Beranda</a></li>
+    <li><a href="menu.html">Menu</a></li>
+    <li><a href="promo.html">Promo</a></li>
+    <li><a href="order.html">Order</a></li>
+    <li><a href="feedback.html">Feedback</a></li>
+    <li><a href="tentang.html">Tentang Kami</a></li>
+  </ul>
+  <div class="nav-actions">
+    <a class="btn-login" href="login.html">Login</a>
+  </div>
+</nav>
+
+<div class="main">
+  <div class="struk">
+    <div class="struk-logo">d'Best<span>O</span></div>
+    <div class="struk-sub">chicken & burger</div>
+    <div class="struk-title">STRUK PEMESANAN</div>
+    <div class="struk-branch">d'BestO – Cabang Politeknik</div>
+    <div class="struk-address">politeknik 1, Kairagi Dua, Kec. Mapanget, Kota<br/>Manado, Sulawesi Utara</div>
+
+    <div class="struk-info">
+      <div class="info-row">
+        <span class="key">No. Order</span>
+        <span class="val order-no">#DB254026-0012</span>
+      </div>
+      <div class="info-row">
+        <span class="key">Tanggal & Waktu</span>
+        <span class="val">26 April 2026 / 17:20 WIB</span>
+      </div>
+      <div class="info-row">
+        <span class="key">Kasir</span>
+        <span class="val">Regina</span>
+      </div>
+      <div class="info-row">
+        <span class="key">Metode Pembayaran</span>
+        <span class="val">Tunai</span>
+      </div>
+    </div>
+
+    <button class="btn-detail" onclick="toggleDetail()">📋 LIHAT DETAIL PEMESANAN</button>
+    <div class="detail-panel" id="detailPanel">
+      <div class="detail-item">
+        <span class="d-name">Chicken Box Lada Hitam × 4</span>
+        <span class="d-price">Rp54,000</span>
+      </div>
+      <div class="detail-item">
+        <span class="d-name">Apel Flazz × 2</span>
+        <span class="d-price">Rp17,000</span>
+      </div>
+      <div class="detail-item">
+        <span class="d-name">DADA × 1</span>
+        <span class="d-price">Rp12,000</span>
+      </div>
+    </div>
+
+    <div class="struk-calc">
+      <div class="calc-row"><span class="lbl">Subtotal</span><span class="val">Rp62,000</span></div>
+      <div class="calc-row"><span class="lbl">Diskon</span><span class="val discount">-Rp4,000</span></div>
+      <div class="calc-row"><span class="lbl">Pajak (10%)</span><span class="val">Rp5,800</span></div>
+    </div>
+
+    <div class="struk-total">
+      <span class="lbl">TOTAL</span>
+      <span class="amount">Rp63,800</span>
+    </div>
+
+    <div class="struk-thankyou">
+      <span>😊</span>
+      Terima kasih telah memesan di d'BestO!
+      <span>😊</span>
+    </div>
+
+    <button class="print-btn" onclick="window.print()">🖨️ Cetak Struk</button>
+  </div>
+  <div style="text-align:center;margin-top:16px;">
+    <a href="menu.html" class="btn-red" style="display:inline-block;">Pesan Lagi</a>
+  </div>
+</div>
+
+<footer>
+  <div class="footer-info">
+    <div class="footer-item"><span class="icon">📍</span><div><div class="label">Lokasi Outlet</div><a href="#" style="color:var(--red);font-size:12px;font-weight:700;">Lihat di Google Maps</a></div></div>
+    <div class="footer-item"><span class="icon">🕐</span><div><div class="label">Jam Buka</div><div class="value">09.00 – 22.00 WITA<br/>Setiap Hari</div></div></div>
+    <div class="footer-item"><span class="icon">📞</span><div><div class="label">Hubungi Kami</div><div class="value">0812-3456-7890</div></div></div>
+  </div>
+  <div class="footer-socials">
+    <a class="soc-ig" href="#">📷</a><a class="soc-wa" href="#">💬</a><a class="soc-fb" href="#">f</a>
+  </div>
+</footer>
+
+<script>
+function toggleDetail() {
+  const panel = document.getElementById('detailPanel');
+  panel.classList.toggle('show');
+}
+</script>
+</body>
+</html>

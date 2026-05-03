@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Pre-Order / Keranjang – d'BestO</title>
+  <link rel="stylesheet" href="style.css"/>
+  <style>
+    .main { padding: 40px; max-width: 1100px; margin: 0 auto; }
+    .order-title { font-family:'Poppins',sans-serif; font-size:26px; font-weight:900; margin-bottom:28px; }
+    .order-title span { margin-right:10px; }
+
+    .order-layout {
+      display: grid;
+      grid-template-columns: 1.3fr 1fr;
+      gap: 28px;
+      align-items: start;
+    }
+
+    /* Cart */
+    .cart-box {
+      background: var(--white);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 22px;
+    }
+    .cart-box h3 { font-size: 16px; font-weight: 800; margin-bottom: 18px; color: #555; }
+    .cart-item {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 14px 0;
+      border-bottom: 1px solid #f0f0f0;
+    }
+    .cart-item:last-of-type { border-bottom: none; }
+    .cart-item img { width: 72px; height: 60px; object-fit: cover; border-radius: 10px; background: var(--gray); flex-shrink: 0; }
+    .cart-item-info { flex: 1; }
+    .cart-item-info .name { font-weight: 800; font-size: 14px; margin-bottom: 2px; }
+    .cart-item-info .unit-price { font-size: 12px; color: #888; }
+    .qty-ctrl {
+      display: flex; align-items: center; gap: 8px;
+      background: var(--gray); border-radius: 25px; padding: 4px 12px;
+    }
+    .qty-ctrl button {
+      background: none; border: none; font-size: 18px; font-weight: 900;
+      cursor: pointer; color: var(--red); width: 24px; height: 24px;
+      display: flex; align-items: center; justify-content: center;
+      transition: color 0.2s;
+    }
+    .qty-ctrl button:hover { color: var(--red-dark); }
+    .qty-ctrl span { font-weight: 800; font-size: 15px; min-width: 20px; text-align: center; }
+    .cart-item-total { font-weight: 800; font-size: 14px; min-width: 80px; text-align: right; }
+    .cart-total-row {
+      display: flex; justify-content: space-between; align-items: center;
+      margin-top: 18px; padding-top: 14px; border-top: 2px solid var(--black);
+    }
+    .cart-total-row .label { font-weight: 800; font-size: 16px; }
+    .cart-total-row .amount { font-weight: 900; font-size: 18px; }
+
+    .empty-cart {
+      text-align: center; padding: 50px 20px;
+      color: #bbb; font-size: 15px; font-weight: 700;
+    }
+    .empty-cart a { color: var(--red); font-weight: 800; text-decoration: none; }
+    .empty-cart a:hover { text-decoration: underline; }
+
+    /* Checkout Form */
+    .checkout-box {
+      background: var(--white);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 22px;
+    }
+    .checkout-box h3 { font-size: 15px; font-weight: 800; margin-bottom: 18px; color: #555; }
+    .form-group { margin-bottom: 16px; }
+    .form-group label { display: block; font-weight: 700; font-size: 13px; margin-bottom: 7px; color: #444; }
+    .form-group input, .form-group select {
+      width: 100%;
+      border: 1.5px solid #ddd;
+      border-radius: 10px;
+      padding: 12px 14px;
+      font-family: 'Nunito', sans-serif;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text);
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .form-group input:focus, .form-group select:focus { border-color: var(--yellow); }
+    .date-time-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .input-icon-wrap { position: relative; }
+    .input-icon-wrap .ico { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); font-size: 18px; }
+    .input-icon-wrap input { padding-left: 38px; }
+
+    .btn-pesan {
+      width: 100%;
+      background: var(--red);
+      color: var(--white);
+      border: none;
+      border-radius: 12px;
+      padding: 16px;
+      font-family: 'Poppins', sans-serif;
+      font-weight: 800;
+      font-size: 17px;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.1s;
+      margin-top: 8px;
+      letter-spacing: 0.5px;
+    }
+    .btn-pesan:hover { background: var(--red-dark); transform: scale(1.02); }
+    .btn-pesan:disabled { background: #ccc; cursor: not-allowed; transform: none; }
+
+    /* Success Modal */
+    .modal-overlay {
+      display: none; position: fixed; inset: 0;
+      background: rgba(0,0,0,0.55); z-index: 500;
+      align-items: center; justify-content: center;
+    }
+    .modal-overlay.show { display: flex; }
+    .modal {
+      background: var(--white); border-radius: 20px;
+      padding: 40px 36px; max-width: 420px; width: 90%;
+      text-align: center; animation: pop 0.3s ease;
+    }
+    @keyframes pop { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+    .modal .icon { font-size: 60px; margin-bottom: 16px; }
+    .modal h2 { font-family:'Poppins',sans-serif; font-size: 22px; font-weight: 900; margin-bottom: 8px; }
+    .modal p { color: #777; font-size: 14px; margin-bottom: 24px; line-height: 1.6; }
+    .modal .btn-red { padding: 12px 36px; }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-logo" href="index.html">
+    <span style="font-family:'Poppins',sans-serif;font-weight:900;font-size:22px;color:var(--black);">d'Best<span style="color:var(--red);">O</span></span>
+    <small style="font-size:10px;color:#888;font-weight:600;">Jagonya Rasa</small>
+  </a>
+  <ul class="nav-links">
+    <li><a href="index.html">Beranda</a></li>
+    <li><a href="menu.html">Menu</a></li>
+    <li><a href="promo.html">Promo</a></li>
+    <li><a href="order.html" class="active">Order</a></li>
+    <li><a href="feedback.html">Feedback</a></li>
+    <li><a href="tentang.html">Tentang Kami</a></li>
+  </ul>
+  <div class="nav-actions">
+    <a class="cart-icon" href="order.html">🛒<span class="cart-badge" id="navCartBadge">0</span></a>
+    <a class="user-icon" href="login.html">👤</a>
+  </div>
+</nav>
+
+<div class="main">
+  <div class="order-title"><span>🛒</span>Pre-Order / Keranjang</div>
+  <div class="order-layout">
+    <!-- CART -->
+    <div class="cart-box">
+      <h3>Keranjang Pesanan</h3>
+      <div id="cartItems"></div>
+      <div class="cart-total-row">
+        <span class="label">Total</span>
+        <span class="amount" id="cartTotal">Rp0</span>
+      </div>
+    </div>
+
+    <!-- CHECKOUT FORM -->
+    <div class="checkout-box">
+      <h3>Pilih Waktu Ambil</h3>
+      <div class="date-time-row">
+        <div class="form-group">
+          <div class="input-icon-wrap">
+            <span class="ico">📅</span>
+            <input type="date" id="pickDate" />
+          </div>
+        </div>
+        <div class="form-group">
+          <div class="input-icon-wrap">
+            <span class="ico">🕐</span>
+            <input type="time" id="pickTime" value="17:00"/>
+          </div>
+        </div>
+      </div>
+
+      <h3 style="margin-top:10px;">Data Pemesan</h3>
+      <div class="form-group">
+        <label>Nama Lengkap</label>
+        <input type="text" id="nama" placeholder="Masukkan nama lengkap"/>
+      </div>
+      <div class="form-group">
+        <label>Nomor WhatsApp</label>
+        <input type="tel" id="whatsapp" placeholder="Contoh: 0812-3456-7890"/>
+      </div>
+
+      <button class="btn-pesan" id="btnPesan" onclick="submitOrder()">Pesan Sekarang</button>
+    </div>
+  </div>
+</div>
+
+<!-- Success Modal -->
+<div class="modal-overlay" id="successModal">
+  <div class="modal">
+    <div class="icon">✅</div>
+    <h2>Pesanan Berhasil!</h2>
+    <p id="successMsg">Terima kasih! Pesananmu telah diterima. Kami akan segera mempersiapkan pesananmu.</p>
+    <a class="btn-red" href="menu.html" onclick="clearCart()">Pesan Lagi</a>
+  </div>
+</div>
+
+<footer>
+  <div class="footer-info">
+    <div class="footer-item"><span class="icon">📍</span><div><div class="label">Lokasi Outlet</div><a href="#" style="color:var(--red);font-size:12px;font-weight:700;">Lihat di Google Maps</a></div></div>
+    <div class="footer-item"><span class="icon">🕐</span><div><div class="label">Jam Buka</div><div class="value">09.00 – 22.00 WITA<br/>Setiap Hari</div></div></div>
+    <div class="footer-item"><span class="icon">📞</span><div><div class="label">Hubungi Kami</div><div class="value">0812-3456-7890</div></div></div>
+  </div>
+  <div class="footer-socials">
+    <a class="soc-ig" href="#">📷</a><a class="soc-wa" href="#">💬</a><a class="soc-fb" href="#">f</a>
+  </div>
+</footer>
+
+<script>
+let cart = JSON.parse(localStorage.getItem('dbesto_cart') || '[]');
+
+// Set default date to today
+const today = new Date();
+document.getElementById('pickDate').value = today.toISOString().split('T')[0];
+document.getElementById('pickDate').min = today.toISOString().split('T')[0];
+
+function rp(n) { return 'Rp' + n.toLocaleString('id'); }
+
+function updateCartBadge() {
+  const total = cart.reduce((a,b) => a + b.qty, 0);
+  document.getElementById('navCartBadge').textContent = total;
+}
+
+function renderCart() {
+  const container = document.getElementById('cartItems');
+  if (cart.length === 0) {
+    container.innerHTML = `<div class="empty-cart">🛒<br/>Keranjang masih kosong!<br/><a href="menu.html">Lihat Menu</a></div>`;
+    document.getElementById('cartTotal').textContent = 'Rp0';
+    document.getElementById('btnPesan').disabled = true;
+    return;
+  }
+  document.getElementById('btnPesan').disabled = false;
+  container.innerHTML = cart.map(item => `
+    <div class="cart-item">
+      <img src="https://placehold.co/72x60/FFD600/1A1A1A?text=${encodeURIComponent(item.name.substring(0,5))}" alt="${item.name}"/>
+      <div class="cart-item-info">
+        <div class="name">${item.name}</div>
+        <div class="unit-price">${rp(item.price)}</div>
+      </div>
+      <div class="qty-ctrl">
+        <button onclick="changeQty(${item.id}, -1)">−</button>
+        <span>${item.qty}</span>
+        <button onclick="changeQty(${item.id}, 1)">+</button>
+      </div>
+      <div class="cart-item-total">${rp(item.price * item.qty)}</div>
+    </div>
+  `).join('');
+  const total = cart.reduce((a,b) => a + b.price * b.qty, 0);
+  document.getElementById('cartTotal').textContent = rp(total);
+}
+
+function changeQty(id, delta) {
+  const idx = cart.findIndex(c => c.id === id);
+  if (idx === -1) return;
+  cart[idx].qty += delta;
+  if (cart[idx].qty <= 0) cart.splice(idx, 1);
+  localStorage.setItem('dbesto_cart', JSON.stringify(cart));
+  renderCart();
+  updateCartBadge();
+}
+
+function submitOrder() {
+  const nama = document.getElementById('nama').value.trim();
+  const wa = document.getElementById('whatsapp').value.trim();
+  const date = document.getElementById('pickDate').value;
+  const time = document.getElementById('pickTime').value;
+  if (!nama) { alert('Nama lengkap harus diisi!'); return; }
+  if (!wa) { alert('Nomor WhatsApp harus diisi!'); return; }
+  if (cart.length === 0) { alert('Keranjang masih kosong!'); return; }
+
+  const total = cart.reduce((a,b) => a + b.price * b.qty, 0);
+  document.getElementById('successMsg').textContent =
+    `Halo ${nama}! Pesananmu senilai Rp${total.toLocaleString('id')} akan siap diambil pada ${date} pukul ${time}. Konfirmasi akan dikirim ke WhatsApp ${wa}.`;
+  document.getElementById('successModal').classList.add('show');
+}
+
+function clearCart() {
+  cart = [];
+  localStorage.removeItem('dbesto_cart');
+  document.getElementById('successModal').classList.remove('show');
+}
+
+renderCart();
+updateCartBadge();
+</script>
+</body>
+</html>
