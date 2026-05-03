@@ -236,6 +236,42 @@ function toggleDetail() {
   const panel = document.getElementById('detailPanel');
   panel.classList.toggle('show');
 }
+
+// Baca data order
+const order = JSON.parse(localStorage.getItem('dbesto_order') || 'null');
+if (order) {
+  // No. Order & info
+  document.querySelector('.info-row:nth-child(1) .val').textContent = order.orderNo;
+  document.querySelector('.info-row:nth-child(2) .val').textContent =
+    order.date + ' / ' + order.time + ' WITA';
+
+  // Detail item
+  const panel = document.getElementById('detailPanel');
+  panel.innerHTML = order.cart.map(item => `
+    <div class="detail-item">
+      <span class="d-name">${item.name} × ${item.qty}</span>
+      <span class="d-price">Rp${(item.price * item.qty).toLocaleString('id')}</span>
+    </div>
+  `).join('');
+
+  // Kalkulasi
+  const subtotal = order.total;
+  const diskon = 0;
+  const pajak = 0;
+  const totalAkhir = subtotal - diskon + pajak;
+
+  document.querySelector('.calc-row:nth-child(1) .val').textContent = 'Rp' + subtotal.toLocaleString('id');
+  document.querySelector('.calc-row:nth-child(2) .val').textContent = diskon > 0 ? '-Rp' + diskon.toLocaleString('id') : 'Rp0';
+  document.querySelector('.calc-row:nth-child(3) .val').textContent = 'Rp' + pajak.toLocaleString('id');
+  document.querySelector('.struk-total .amount').textContent = 'Rp' + totalAkhir.toLocaleString('id');
+
+  // Pesan terima kasih dengan nama
+  document.querySelector('.struk-thankyou').innerHTML =
+    `<span>😊</span> Terima kasih, ${order.nama}! Pesananmu sedang dipersiapkan. <span>😊</span>`;
+
+  // Hapus cart setelah struk dibuka
+  localStorage.removeItem('dbesto_cart');
+}
 </script>
 </body>
 </html>

@@ -202,8 +202,11 @@
   <div class="modal">
     <div class="icon">✅</div>
     <h2>Pesanan Berhasil!</h2>
-    <p id="successMsg">Terima kasih! Pesananmu telah diterima. Kami akan segera mempersiapkan pesananmu.</p>
-    <a class="btn-red" href="menu.html" onclick="clearCart()">Pesan Lagi</a>
+    <p id="successMsg">Terima kasih! Pesananmu telah diterima.</p>
+    <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
+      <a class="btn-red" id="btnStruk" href="struk.html">🖨️ Cetak Struk</a>
+      <a class="btn-outline" href="menu.html" onclick="clearCart()">Pesan Lagi</a>
+    </div>
   </div>
 </div>
 
@@ -302,8 +305,19 @@ function submitOrder() {
   if (cart.length === 0) { alert('Keranjang masih kosong!'); return; }
 
   const total = cart.reduce((a,b) => a + b.price * b.qty, 0);
+
+  // Simpan data order ke localStorage supaya struk.html bisa baca
+  const orderData = {
+    nama, wa, date, time, cart,
+    total,
+    orderNo: '#DB' + Date.now().toString().slice(-8),
+    kasir: 'Kasir',
+    waktu: new Date().toLocaleString('id-ID')
+  };
+  localStorage.setItem('dbesto_order', JSON.stringify(orderData));
+
   document.getElementById('successMsg').textContent =
-    `Halo ${nama}! Pesananmu senilai Rp${total.toLocaleString('id')} akan siap diambil pada ${date} pukul ${time}. Konfirmasi akan dikirim ke WhatsApp ${wa}.`;
+    `Halo ${nama}! Pesananmu senilai Rp${total.toLocaleString('id')} akan siap diambil pada ${date} pukul ${time}.`;
   document.getElementById('successModal').classList.add('show');
 }
 
