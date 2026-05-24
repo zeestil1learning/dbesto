@@ -132,10 +132,13 @@
 </head>
 <body>
 
+<!-- NAVBAR (Dengan Logo Gambar) -->
 <nav>
   <a class="nav-logo" href="index.html">
-    <span style="font-family:'Poppins',sans-serif;font-weight:900;font-size:22px;color:var(--black);">d'Best<span style="font-size:22px;color:var(--red);">O</span></span>
-    <small style="font-size:10px;color:#888;font-weight:600;">Jagonya Rasa</small>
+    <img src="https://files.catbox.moe/ukd7wv.png" 
+         alt="d'BestO Logo" 
+         style="height: 60px; width: auto; object-fit: contain;"
+         onerror="this.src='https://placehold.co/180x60/FFD600/1A1A1A?text=d%27BestO'"/>
   </a>
   <ul class="nav-links">
     <li><a href="index.html">Beranda</a></li>
@@ -197,16 +200,13 @@
   </div>
 </div>
 
-<!-- Success Modal -->
+<!-- Success Modal (UPDATED) -->
 <div class="modal-overlay" id="successModal">
   <div class="modal">
     <div class="icon">✅</div>
     <h2>Pesanan Berhasil!</h2>
     <p id="successMsg">Terima kasih! Pesananmu telah diterima.</p>
-    <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
-      <a class="btn-red" id="btnStruk" href="struk.html">🖨️ Cetak Struk</a>
-      <a class="btn-outline" href="menu.html" onclick="clearCart()">Pesan Lagi</a>
-    </div>
+    <div style="font-size:13px;color:#888;margin-top:10px;">Mengalihkan ke struk...</div>
   </div>
 </div>
 
@@ -243,7 +243,42 @@
 </footer>
 
 <script>
+// === Master data semua item (menu + promo) untuk ambil foto ===
+const allItems = {
+  1:   { img: 'https://files.catbox.moe/okt04q.png' },
+  2:   { img: 'https://files.catbox.moe/8p2elz.png' },
+  3:   { img: 'https://files.catbox.moe/zw8rzm.png' },
+  4:   { img: 'https://files.catbox.moe/okt04q.png' },
+  5:   { img: 'https://files.catbox.moe/8p2elz.png' },
+  6:   { img: 'https://files.catbox.moe/okt04q.png' },
+  7:   { img: 'https://files.catbox.moe/zw8rzm.png' },
+  8:   { img: 'https://files.catbox.moe/okt04q.png' },
+  9:   { img: 'https://files.catbox.moe/zw8rzm.png' },
+  10:  { img: 'https://files.catbox.moe/zw8rzm.png' },
+  11:  { img: 'https://files.catbox.moe/8p2elz.png' },
+  12:  { img: 'https://files.catbox.moe/zw8rzm.png' },
+  13:  { img: 'https://files.catbox.moe/okt04q.png' },
+  14:  { img: 'https://files.catbox.moe/zw8rzm.png' },
+  15:  { img: 'https://files.catbox.moe/okt04q.png' },
+  16:  { img: 'https://files.catbox.moe/zw8rzm.png' },
+  101: { img: 'https://files.catbox.moe/okt04q.png' },
+  102: { img: 'https://files.catbox.moe/8p2elz.png' },
+  103: { img: 'https://files.catbox.moe/zw8rzm.png' },
+  104: { img: 'https://files.catbox.moe/zw8rzm.png' },
+  105: { img: 'https://files.catbox.moe/okt04q.png' },
+  106: { img: 'https://files.catbox.moe/8p2elz.png' },
+  107: { img: 'https://files.catbox.moe/okt04q.png' },
+  108: { img: 'https://files.catbox.moe/8p2elz.png' },
+};
+
+function getImg(item) {
+  if (item.img) return item.img;
+  if (allItems[item.id]) return allItems[item.id].img;
+  return 'https://files.catbox.moe/okt04q.png';
+}
+
 let cart = JSON.parse(localStorage.getItem('dbesto_cart') || '[]');
+const months = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
 
 // Set default date to today
 const today = new Date();
@@ -268,7 +303,12 @@ function renderCart() {
   document.getElementById('btnPesan').disabled = false;
   container.innerHTML = cart.map(item => `
     <div class="cart-item">
-      <img src="https://placehold.co/72x60/FFD600/1A1A1A?text=${encodeURIComponent(item.name.substring(0,5))}" alt="${item.name}"/>
+      <img
+        src="${getImg(item)}"
+        alt="${item.name}"
+        onerror="this.onerror=null;this.src='https://placehold.co/72x60/FFD600/1A1A1A?text=Menu'"
+        style="width:72px;height:60px;object-fit:cover;border-radius:10px;flex-shrink:0;"
+      />
       <div class="cart-item-info">
         <div class="name">${item.name}</div>
         <div class="unit-price">${rp(item.price)}</div>
@@ -295,38 +335,66 @@ function changeQty(id, delta) {
   updateCartBadge();
 }
 
+// === FUNGSI SUBMIT ORDER (FIXED) ===
 function submitOrder() {
   const nama = document.getElementById('nama').value.trim();
   const wa = document.getElementById('whatsapp').value.trim();
   const date = document.getElementById('pickDate').value;
   const time = document.getElementById('pickTime').value;
+  
   if (!nama) { alert('Nama lengkap harus diisi!'); return; }
   if (!wa) { alert('Nomor WhatsApp harus diisi!'); return; }
   if (cart.length === 0) { alert('Keranjang masih kosong!'); return; }
 
   const total = cart.reduce((a,b) => a + b.price * b.qty, 0);
-
-  // Simpan data order ke localStorage supaya struk.html bisa baca
+  
+  // Generate order number unik
+  const now = new Date();
+  const orderNo = '#DB' + now.getFullYear().toString().slice(-2) + 
+                  String(now.getMonth()+1).padStart(2,'0') + 
+                  String(now.getDate()).padStart(2,'0') + '-' + 
+                  String(Math.floor(Math.random()*9000)+1000);
+  
+  // Format tanggal ke Bahasa Indonesia
+  const dateStr = `${now.getDate()} ${months[now.getMonth()]} ${now.getFullYear()}`;
+  const timeStr = `${now.getHours()}:${String(now.getMinutes()).padStart(2,'0')}`;
+  
+  // Simpan data order ke localStorage untuk halaman struk
   const orderData = {
-    nama, wa, date, time, cart,
-    total,
-    orderNo: '#DB' + Date.now().toString().slice(-8),
-    kasir: 'Kasir',
-    waktu: new Date().toLocaleString('id-ID')
+    orderNo: orderNo,
+    nama: nama,
+    whatsapp: wa,
+    date: dateStr,
+    time: timeStr,
+    pickDate: date,
+    pickTime: time,
+    cart: JSON.parse(JSON.stringify(cart)), // deep copy
+    total: total,
+    timestamp: now.toISOString()
   };
+  
   localStorage.setItem('dbesto_order', JSON.stringify(orderData));
-
+  
+  // Tampilkan pesan sukses
   document.getElementById('successMsg').textContent =
-    `Halo ${nama}! Pesananmu senilai Rp${total.toLocaleString('id')} akan siap diambil pada ${date} pukul ${time}.`;
+    `Halo ${nama}! Pesananmu senilai Rp${total.toLocaleString('id')} akan siap diambil pada ${pickDate} pukul ${pickTime}. Konfirmasi akan dikirim ke WhatsApp ${wa}.`;
+  
+  // Tampilkan modal
   document.getElementById('successModal').classList.add('show');
+  
+  // Redirect ke struk.html setelah 1.5 detik
+  setTimeout(() => {
+    window.location.href = 'struk.html';
+  }, 1500);
 }
 
 function clearCart() {
   cart = [];
   localStorage.removeItem('dbesto_cart');
-  document.getElementById('successModal').classList.remove('show');
+  updateCartBadge();
 }
 
+// Init
 renderCart();
 updateCartBadge();
 </script>

@@ -58,7 +58,13 @@
       border-radius: 14px;
       overflow: hidden;
     }
-    .cerita-img img { width: 100%; height: 180px; object-fit: cover; display: block; border-radius: 14px; }
+    .cerita-img img { 
+      width: 100%; 
+      height: 180px; 
+      object-fit: cover; 
+      display: block; 
+      border-radius: 14px; 
+    }
 
     /* Visi Misi */
     .visi-misi {
@@ -106,11 +112,14 @@
   </style>
 </head>
 <body>
-
+  
+<!-- NAVBAR (FIXED) -->
 <nav>
   <a class="nav-logo" href="index.html">
-    <span style="font-family:'Poppins',sans-serif;font-weight:900;font-size:22px;color:var(--black);">d'Best<span style="font-size:22px;color:var(--red);">O</span></span>
-    <small style="font-size:10px;color:#888;font-weight:600;">Jagonya Rasa</small>
+    <img src="https://files.catbox.moe/ukd7wv.png" 
+         alt="d'BestO Logo" 
+         style="height: 60px; width: auto; object-fit: contain;"
+         onerror="this.src='https://placehold.co/180x60/FFD600/1A1A1A?text=d%27BestO'"/>
   </a>
   <ul class="nav-links">
     <li><a href="index.html">Beranda</a></li>
@@ -122,7 +131,7 @@
   </ul>
   <div class="nav-actions">
     <a class="cart-icon" href="order.html">🛒<span class="cart-badge" id="navCartBadge">0</span></a>
-    <a class="btn-login" href="login.html">Login</a>
+    <a class="user-icon" href="login.html">👤</a>
   </div>
 </nav>
 
@@ -158,7 +167,10 @@
       </p>
     </div>
     <div class="cerita-img">
-      <img src="https://placehold.co/240x180/FFD600/1A1A1A?text=d'BestO+Outlet" alt="Outlet d'BestO"/>
+      <!-- GAMBAR DIPERBARUI -->
+      <img src="https://files.catbox.moe/cnvttl.jpg" 
+           alt="Outlet d'BestO"
+           onerror="this.src='https://placehold.co/240x180/FFD600/1A1A1A?text=d%27BestO+Outlet'"/>
     </div>
   </div>
 

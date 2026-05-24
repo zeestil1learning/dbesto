@@ -1,0 +1,944 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Manajemen – d'BestO</title>
+  <link rel="stylesheet" href="style.css"/>
+  <style>
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body { display:flex; min-height:100vh; background:#f0f0f0; font-family:'Nunito',sans-serif; }
+
+    /* ===== SIDEBAR ===== */
+    .sidebar {
+      width: 210px;
+      background: #1A1A1A;
+      display: flex;
+      flex-direction: column;
+      position: fixed;
+      top:0; left:0; bottom:0;
+      z-index: 100;
+    }
+    .sidebar-logo {
+      padding: 20px 18px 10px;
+      text-align: center;
+      border-bottom: 1px solid #333;
+    }
+    .sidebar-logo img { width: 120px; object-fit: contain; }
+    .sidebar-logo .role-badge {
+      margin-top: 6px;
+      display: inline-block;
+      background: var(--yellow);
+      color: var(--black);
+      font-size: 11px;
+      font-weight: 900;
+      padding: 3px 14px;
+      border-radius: 20px;
+      letter-spacing: 0.5px;
+    }
+    .sidebar-menu {
+      flex: 1;
+      padding: 16px 0;
+      list-style: none;
+    }
+    .sidebar-menu li a {
+      display: flex;
+      align-items: center;
+      gap: 13px;
+      padding: 13px 22px;
+      color: #aaa;
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 14px;
+      transition: all 0.2s;
+      cursor: pointer;
+      border-left: 3px solid transparent;
+    }
+    .sidebar-menu li a:hover { color: var(--white); background: rgba(255,255,255,0.06); }
+    .sidebar-menu li a.active {
+      color: var(--black);
+      background: var(--yellow);
+      border-left-color: #e6b800;
+      border-radius: 0 10px 10px 0;
+      margin-right: 12px;
+    }
+    .sidebar-menu li a .ico { font-size: 18px; width: 22px; text-align: center; }
+    .sidebar-bottom {
+      padding: 14px 0;
+      border-top: 1px solid #333;
+    }
+    .sidebar-bottom a {
+      display: flex; align-items: center; gap: 13px;
+      padding: 13px 22px; color: #aaa; text-decoration: none;
+      font-weight: 700; font-size: 14px; cursor: pointer; transition: color 0.2s;
+    }
+    .sidebar-bottom a:hover { color: #ff6b6b; }
+
+    /* Switch role button */
+    .switch-role-btn {
+      margin: 8px 14px;
+      background: #2a2a2a;
+      border: 1px solid #444;
+      border-radius: 10px;
+      padding: 10px 14px;
+      color: #ddd;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      width: calc(100% - 28px);
+      text-align: left;
+      display: flex; align-items: center; gap: 8px;
+      transition: background 0.2s;
+    }
+    .switch-role-btn:hover { background: #333; }
+
+    /* ===== MAIN CONTENT ===== */
+    .main-content {
+      margin-left: 210px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+    .topbar {
+      background: var(--white);
+      padding: 0 32px;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+      position: sticky; top: 0; z-index: 50;
+    }
+    .topbar h1 { font-family:'Poppins',sans-serif; font-size:20px; font-weight:900; }
+    .topbar-right { display: flex; align-items: center; gap: 14px; }
+    .topbar-user {
+      display: flex; align-items: center; gap: 8px;
+      font-weight: 700; font-size: 14px;
+    }
+    .topbar-avatar {
+      width: 34px; height: 34px;
+      background: var(--yellow);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 16px;
+    }
+
+    .page-body { padding: 28px 32px; flex: 1; }
+
+    /* ===== PAGES ===== */
+    .page { display: none; }
+    .page.active { display: block; }
+
+    /* ===== DASHBOARD ===== */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 18px;
+      margin-bottom: 28px;
+    }
+    .stat-card {
+      background: var(--white);
+      border-radius: 14px;
+      padding: 20px 22px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+      display: flex; align-items: center; gap: 16px;
+    }
+    .stat-icon {
+      width: 50px; height: 50px;
+      border-radius: 14px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 24px; flex-shrink: 0;
+    }
+    .stat-card .num { font-family:'Poppins',sans-serif; font-size:26px; font-weight:900; }
+    .stat-card .lbl { font-size:12px; color:#888; font-weight:700; margin-top:2px; }
+
+    .dashboard-grid {
+      display: grid;
+      grid-template-columns: 1.5fr 1fr;
+      gap: 20px;
+    }
+    .panel {
+      background: var(--white);
+      border-radius: 14px;
+      padding: 22px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+    }
+    .panel-title {
+      font-family:'Poppins',sans-serif;
+      font-size:15px; font-weight:800;
+      margin-bottom: 16px;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .panel-title a { font-size:12px; color:var(--red); font-weight:700; text-decoration:none; cursor:pointer; }
+
+    /* ===== TABLE ===== */
+    .data-table { width:100%; border-collapse:collapse; }
+    .data-table th {
+      text-align:left; padding:10px 14px;
+      font-size:13px; font-weight:800; color:#555;
+      border-bottom: 2px solid #f0f0f0; background:#fafafa;
+    }
+    .data-table td {
+      padding:12px 14px; font-size:13px; font-weight:600;
+      border-bottom:1px solid #f5f5f5; vertical-align:middle;
+    }
+    .data-table tr:hover td { background:#fafcff; }
+    .data-table tr:last-child td { border-bottom:none; }
+
+    .badge {
+      padding: 4px 12px; border-radius: 20px;
+      font-size: 12px; font-weight: 800; display: inline-block;
+    }
+    .badge-green { background:#dcfce7; color:#16a34a; }
+    .badge-red { background:#fee2e2; color:#dc2626; }
+    .badge-orange { background:#fef3c7; color:#d97706; }
+    .badge-blue { background:#dbeafe; color:#2563eb; }
+    .badge-gray { background:#f3f4f6; color:#6b7280; }
+
+    .action-btns { display:flex; gap:6px; }
+    .btn-icon {
+      width:30px; height:30px; border:none; border-radius:8px;
+      cursor:pointer; font-size:14px;
+      display:flex; align-items:center; justify-content:center;
+      transition: transform 0.15s;
+    }
+    .btn-icon:hover { transform:scale(1.15); }
+    .btn-edit { background:#fef3c7; color:#d97706; }
+    .btn-delete { background:#fee2e2; color:#dc2626; }
+
+    /* ===== NOTIFICATION BAR ===== */
+    .notif-bar {
+      background: #fef9ec;
+      border: 1.5px solid var(--yellow);
+      border-radius: 12px;
+      padding: 14px 20px;
+      display: flex; align-items: center; justify-content: space-between;
+      margin-top: 20px; gap: 16px;
+    }
+    .notif-left { display:flex; align-items:center; gap:14px; }
+    .notif-icon { font-size:32px; }
+    .notif-title { font-weight:800; font-size:14px; margin-bottom:3px; }
+    .notif-text { font-size:13px; color:#666; }
+    .btn-yellow {
+      background:var(--yellow); color:var(--black);
+      border:none; border-radius:10px; padding:10px 20px;
+      font-weight:800; font-size:13px; cursor:pointer; white-space:nowrap;
+      transition: background 0.2s;
+    }
+    .btn-yellow:hover { background:var(--yellow-dark); }
+
+    /* ===== ADD BUTTON ===== */
+    .page-header {
+      display:flex; align-items:center; justify-content:space-between;
+      margin-bottom:20px;
+    }
+    .page-header h2 { font-family:'Poppins',sans-serif; font-size:22px; font-weight:900; }
+    .btn-add {
+      background:var(--yellow); color:var(--black);
+      border:none; border-radius:10px; padding:11px 22px;
+      font-family:'Nunito',sans-serif; font-weight:800; font-size:14px;
+      cursor:pointer; transition:background 0.2s, transform 0.1s;
+    }
+    .btn-add:hover { background:var(--yellow-dark); transform:scale(1.04); }
+
+    /* ===== MODAL ===== */
+    .modal-overlay {
+      display:none; position:fixed; inset:0;
+      background:rgba(0,0,0,0.5); z-index:500;
+      align-items:center; justify-content:center;
+    }
+    .modal-overlay.show { display:flex; }
+    .modal-box {
+      background:var(--white); border-radius:18px;
+      padding:30px 28px; max-width:440px; width:90%;
+      animation: pop 0.25s ease;
+    }
+    @keyframes pop { from{transform:scale(0.85);opacity:0} to{transform:scale(1);opacity:1} }
+    .modal-title { font-family:'Poppins',sans-serif; font-size:18px; font-weight:900; margin-bottom:20px; }
+    .modal-form .form-group { margin-bottom:14px; }
+    .modal-form label { display:block; font-size:12px; font-weight:800; color:#555; margin-bottom:5px; }
+    .modal-form input, .modal-form select {
+      width:100%; border:1.5px solid #ddd; border-radius:10px;
+      padding:10px 13px; font-family:'Nunito',sans-serif; font-size:14px;
+      font-weight:600; outline:none; transition:border-color 0.2s;
+    }
+    .modal-form input:focus, .modal-form select:focus { border-color:var(--yellow); }
+    .modal-actions { display:flex; gap:10px; justify-content:flex-end; margin-top:20px; }
+    .btn-cancel {
+      background:#f3f4f6; color:#555; border:none;
+      border-radius:10px; padding:10px 22px;
+      font-family:'Nunito',sans-serif; font-weight:800; cursor:pointer;
+    }
+    .btn-save {
+      background:var(--red); color:var(--white); border:none;
+      border-radius:10px; padding:10px 24px;
+      font-family:'Nunito',sans-serif; font-weight:800; cursor:pointer;
+      transition:background 0.2s;
+    }
+    .btn-save:hover { background:var(--red-dark); }
+
+    /* ===== CHART (simple bars) ===== */
+    .chart-wrap { display:flex; align-items:flex-end; gap:10px; height:130px; padding-top:10px; }
+    .bar-col { flex:1; display:flex; flex-direction:column; align-items:center; gap:5px; }
+    .bar {
+      width:100%; border-radius:6px 6px 0 0;
+      background:var(--yellow); transition:height 0.5s ease;
+      min-height:4px;
+    }
+    .bar-lbl { font-size:11px; color:#888; font-weight:700; }
+    .bar-val { font-size:11px; font-weight:800; color:var(--black); }
+
+    /* ===== PESANAN ===== */
+    .order-status-filter { display:flex; gap:8px; margin-bottom:18px; flex-wrap:wrap; }
+    .status-btn {
+      padding:7px 18px; border-radius:20px; border:1.5px solid #ddd;
+      font-family:'Nunito',sans-serif; font-weight:700; font-size:13px;
+      cursor:pointer; background:transparent; transition:all 0.2s;
+    }
+    .status-btn.active { background:var(--yellow); border-color:var(--yellow); color:var(--black); }
+
+    /* ===== FEEDBACK ===== */
+    .feedback-list { display:flex; flex-direction:column; gap:12px; }
+    .feedback-item {
+      background:var(--white); border-radius:12px; padding:16px 20px;
+      box-shadow:0 2px 8px rgba(0,0,0,0.06);
+      display:flex; justify-content:space-between; align-items:flex-start;
+    }
+    .fb-stars { color:var(--yellow); font-size:14px; margin-bottom:4px; }
+    .fb-name { font-weight:800; font-size:14px; margin-bottom:2px; }
+    .fb-text { font-size:13px; color:#666; }
+    .fb-date { font-size:11px; color:#bbb; margin-top:6px; }
+
+    /* ===== LAPORAN ===== */
+    .report-cards {
+      display:grid; grid-template-columns:repeat(3,1fr); gap:16px; margin-bottom:24px;
+    }
+    .report-card {
+      background:var(--white); border-radius:14px; padding:20px;
+      box-shadow:0 2px 10px rgba(0,0,0,0.07); text-align:center;
+    }
+    .report-card .r-num { font-family:'Poppins',sans-serif; font-size:28px; font-weight:900; }
+    .report-card .r-lbl { font-size:12px; color:#888; font-weight:700; margin-top:4px; }
+
+    /* ===== SWITCH ROLE MODAL ===== */
+    .role-modal {
+      background:var(--white); border-radius:20px;
+      padding:32px 28px; max-width:380px; width:90%;
+      animation:pop 0.25s ease; text-align:center;
+    }
+    .role-modal h2 { font-family:'Poppins',sans-serif; font-size:20px; font-weight:900; margin-bottom:6px; }
+    .role-modal p { font-size:13px; color:#888; margin-bottom:22px; }
+    .role-options { display:flex; flex-direction:column; gap:10px; }
+    .role-option {
+      border:2px solid #eee; border-radius:12px; padding:14px 18px;
+      display:flex; align-items:center; gap:14px;
+      cursor:pointer; transition:all 0.2s; text-align:left;
+    }
+    .role-option:hover { border-color:var(--yellow); background:#fffbea; }
+    .role-option.selected { border-color:var(--yellow); background:#fffbea; }
+    .role-option .r-icon { font-size:28px; flex-shrink:0; }
+    .role-option .r-title { font-weight:800; font-size:14px; }
+    .role-option .r-desc { font-size:12px; color:#888; margin-top:2px; }
+
+    /* Pengaturan */
+    .settings-section { background:var(--white); border-radius:14px; padding:24px; box-shadow:0 2px 10px rgba(0,0,0,0.07); margin-bottom:18px; }
+    .settings-section h3 { font-size:15px; font-weight:800; margin-bottom:16px; padding-bottom:10px; border-bottom:1px solid #f0f0f0; }
+    .setting-row { display:flex; align-items:center; justify-content:space-between; padding:10px 0; border-bottom:1px solid #f8f8f8; }
+    .setting-row:last-child { border-bottom:none; }
+    .setting-row .s-lbl { font-size:14px; font-weight:700; }
+    .setting-row .s-desc { font-size:12px; color:#999; margin-top:2px; }
+    .toggle {
+      width:44px; height:24px; background:#ddd; border-radius:20px;
+      position:relative; cursor:pointer; transition:background 0.2s;
+    }
+    .toggle.on { background:var(--yellow); }
+    .toggle::after {
+      content:''; position:absolute; top:3px; left:3px;
+      width:18px; height:18px; background:var(--white);
+      border-radius:50%; transition:left 0.2s;
+      box-shadow:0 1px 4px rgba(0,0,0,0.2);
+    }
+    .toggle.on::after { left:23px; }
+  </style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="sidebar-logo">
+    <img src="https://files.catbox.moe/ukd7wv.png" alt="d'BestO"/>
+    <div class="role-badge" id="roleBadge">Admin</div>
+  </div>
+  <ul class="sidebar-menu">
+    <li><a class="active" onclick="showPage('dashboard', this)"><span class="ico">🏠</span> Dashboard</a></li>
+    <li><a onclick="showPage('stok', this)"><span class="ico">📦</span> Stok</a></li>
+    <li><a onclick="showPage('pesanan', this)"><span class="ico">📋</span> Pesanan</a></li>
+    <li><a onclick="showPage('feedback', this)"><span class="ico">💬</span> Feedback</a></li>
+    <li><a onclick="showPage('laporan', this)"><span class="ico">📊</span> Laporan</a></li>
+    <li><a onclick="showPage('pengaturan', this)"><span class="ico">⚙️</span> Pengaturan</a></li>
+  </ul>
+  <button class="switch-role-btn" onclick="openRoleModal()">
+    <span>🔄</span> Ganti Mode Akun
+  </button>
+  <div class="sidebar-bottom">
+    <a onclick="doLogout()"><span class="ico">🚪</span> Logout</a>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<div class="main-content">
+  <div class="topbar">
+    <h1 id="pageTitle">Dashboard</h1>
+    <div class="topbar-right">
+      <div style="font-size:12px;color:#888;font-weight:700;" id="topbarDate"></div>
+      <div class="topbar-user">
+        <div class="topbar-avatar">👤</div>
+        <span id="topbarName">Admin</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="page-body">
+
+    <!-- ===== DASHBOARD ===== -->
+    <div class="page active" id="page-dashboard">
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-icon" style="background:#fef9c3;">📦</div>
+          <div><div class="num">6</div><div class="lbl">Total Produk Stok</div></div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon" style="background:#dcfce7;">🛒</div>
+          <div><div class="num" id="dashOrderCount">0</div><div class="lbl">Pesanan Masuk</div></div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon" style="background:#fee2e2;">⚠️</div>
+          <div><div class="num">2</div><div class="lbl">Stok Bermasalah</div></div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon" style="background:#dbeafe;">⭐</div>
+          <div><div class="num" id="dashFbCount">0</div><div class="lbl">Feedback Pelanggan</div></div>
+        </div>
+      </div>
+
+      <div class="dashboard-grid">
+        <div class="panel">
+          <div class="panel-title">
+            Penjualan Mingguan
+            <a>Lihat Semua</a>
+          </div>
+          <div class="chart-wrap" id="chartWrap"></div>
+        </div>
+        <div class="panel">
+          <div class="panel-title">Pesanan Terbaru <a onclick="showPage('pesanan',null)">Lihat Semua</a></div>
+          <div id="recentOrders"></div>
+        </div>
+      </div>
+
+      <div class="notif-bar" id="notifBar"></div>
+    </div>
+
+    <!-- ===== STOK ===== -->
+    <div class="page" id="page-stok">
+      <div class="page-header">
+        <h2>Manajemen Stok</h2>
+        <button class="btn-add" onclick="openAddStok()">+ Tambah Stok</button>
+      </div>
+      <div class="panel" style="padding:0;overflow:hidden;">
+        <table class="data-table" id="stokTable">
+          <thead>
+            <tr>
+              <th>Nama Barang</th>
+              <th>Jumlah</th>
+              <th>Satuan</th>
+              <th>Status</th>
+              <th>Aksi</th>
+            </tr>
+          </thead>
+          <tbody id="stokBody"></tbody>
+        </table>
+      </div>
+      <div class="notif-bar" id="stokNotif" style="margin-top:20px;"></div>
+    </div>
+
+    <!-- ===== PESANAN ===== -->
+    <div class="page" id="page-pesanan">
+      <div class="page-header">
+        <h2>Manajemen Pesanan</h2>
+        <span id="orderCount" style="font-size:13px;color:#888;font-weight:700;"></span>
+      </div>
+      <div class="order-status-filter">
+        <button class="status-btn active" onclick="filterOrders('semua',this)">Semua</button>
+        <button class="status-btn" onclick="filterOrders('menunggu',this)">Menunggu</button>
+        <button class="status-btn" onclick="filterOrders('diproses',this)">Diproses</button>
+        <button class="status-btn" onclick="filterOrders('selesai',this)">Selesai</button>
+      </div>
+      <div class="panel" style="padding:0;overflow:hidden;">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>No. Order</th>
+              <th>Pelanggan</th>
+              <th>Item</th>
+              <th>Total</th>
+              <th>Waktu Ambil</th>
+              <th>Status</th>
+              <th>Aksi</th>
+            </tr>
+          </thead>
+          <tbody id="pesananBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ===== FEEDBACK ===== -->
+    <div class="page" id="page-feedback">
+      <div class="page-header">
+        <h2>Feedback Pelanggan</h2>
+        <div style="display:flex;align-items:center;gap:6px;">
+          <span style="font-size:20px;">⭐</span>
+          <span id="avgRating" style="font-family:'Poppins',sans-serif;font-size:20px;font-weight:900;"></span>
+          <span style="font-size:13px;color:#888;font-weight:700;">rata-rata</span>
+        </div>
+      </div>
+      <div class="feedback-list" id="feedbackAdmin"></div>
+    </div>
+
+    <!-- ===== LAPORAN ===== -->
+    <div class="page" id="page-laporan">
+      <div class="page-header"><h2>Laporan</h2>
+        <button class="btn-add" onclick="alert('Export PDF belum tersedia')">⬇ Export PDF</button>
+      </div>
+      <div class="report-cards">
+        <div class="report-card">
+          <div class="r-num" id="repPendapatan">Rp0</div>
+          <div class="r-lbl">Total Pendapatan</div>
+        </div>
+        <div class="report-card">
+          <div class="r-num" id="repPesanan">0</div>
+          <div class="r-lbl">Total Pesanan</div>
+        </div>
+        <div class="report-card">
+          <div class="r-num" id="repFb">0</div>
+          <div class="r-lbl">Total Feedback</div>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="panel-title">Ringkasan Stok</div>
+        <table class="data-table" id="laporanStok"></table>
+      </div>
+    </div>
+
+    <!-- ===== PENGATURAN ===== -->
+    <div class="page" id="page-pengaturan">
+      <div class="page-header"><h2>Pengaturan</h2></div>
+      <div class="settings-section">
+        <h3>Informasi Restoran</h3>
+        <div class="form-group" style="margin-bottom:14px;">
+          <label style="font-size:12px;font-weight:800;color:#555;display:block;margin-bottom:6px;">Nama Cabang</label>
+          <input type="text" value="d'BestO – Cabang Politeknik" style="width:100%;border:1.5px solid #ddd;border-radius:10px;padding:10px 13px;font-family:'Nunito',sans-serif;font-size:14px;font-weight:600;outline:none;"/>
+        </div>
+        <div class="form-group">
+          <label style="font-size:12px;font-weight:800;color:#555;display:block;margin-bottom:6px;">Jam Operasional</label>
+          <input type="text" value="09.00 – 22.00 WITA" style="width:100%;border:1.5px solid #ddd;border-radius:10px;padding:10px 13px;font-family:'Nunito',sans-serif;font-size:14px;font-weight:600;outline:none;"/>
+        </div>
+      </div>
+      <div class="settings-section">
+        <h3>Notifikasi</h3>
+        <div class="setting-row">
+          <div><div class="s-lbl">Notifikasi Stok Menipis</div><div class="s-desc">Alert ketika stok di bawah batas minimum</div></div>
+          <div class="toggle on" onclick="this.classList.toggle('on')"></div>
+        </div>
+        <div class="setting-row">
+          <div><div class="s-lbl">Notifikasi Pesanan Baru</div><div class="s-desc">Alert ketika ada pesanan masuk</div></div>
+          <div class="toggle on" onclick="this.classList.toggle('on')"></div>
+        </div>
+        <div class="setting-row">
+          <div><div class="s-lbl">Email Laporan Harian</div><div class="s-desc">Kirim ringkasan ke email admin</div></div>
+          <div class="toggle" onclick="this.classList.toggle('on')"></div>
+        </div>
+      </div>
+      <button class="btn-save" style="padding:12px 32px;border-radius:12px;font-size:15px;" onclick="alert('Pengaturan disimpan!')">Simpan Perubahan</button>
+    </div>
+
+  </div><!-- end page-body -->
+</div><!-- end main-content -->
+
+<!-- ===== MODAL TAMBAH/EDIT STOK ===== -->
+<div class="modal-overlay" id="stokModal">
+  <div class="modal-box">
+    <div class="modal-title" id="stokModalTitle">Tambah Stok</div>
+    <div class="modal-form">
+      <input type="hidden" id="stokEditIdx" value="-1"/>
+      <div class="form-group">
+        <label>Nama Barang</label>
+        <input type="text" id="stokNama" placeholder="cth: Ayam"/>
+      </div>
+      <div class="form-group">
+        <label>Jumlah</label>
+        <input type="number" id="stokJumlah" placeholder="0" min="0"/>
+      </div>
+      <div class="form-group">
+        <label>Satuan</label>
+        <select id="stokSatuan">
+          <option>Kg</option><option>Liter</option><option>Pcs</option><option>Pack</option><option>Box</option>
+        </select>
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeModal('stokModal')">Batal</button>
+      <button class="btn-save" onclick="saveStok()">Simpan</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== MODAL DELETE KONFIRMASI ===== -->
+<div class="modal-overlay" id="deleteModal">
+  <div class="modal-box" style="text-align:center;max-width:360px;">
+    <div style="font-size:48px;margin-bottom:12px;">🗑️</div>
+    <div class="modal-title" style="justify-content:center;">Hapus Stok?</div>
+    <p style="color:#888;font-size:14px;margin-bottom:22px;">Tindakan ini tidak bisa dibatalkan.</p>
+    <div class="modal-actions" style="justify-content:center;">
+      <button class="btn-cancel" onclick="closeModal('deleteModal')">Batal</button>
+      <button class="btn-save" onclick="confirmDelete()">Ya, Hapus</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== MODAL SWITCH ROLE ===== -->
+<div class="modal-overlay" id="roleModal">
+  <div class="role-modal">
+    <h2>Ganti Mode Akun</h2>
+    <p>Pilih tampilan yang ingin diakses</p>
+    <div class="role-options">
+      <div class="role-option selected" id="roleOpt-admin" onclick="switchRole('admin')">
+        <span class="r-icon">🔧</span>
+        <div>
+          <div class="r-title">Manajemen / Admin</div>
+          <div class="r-desc">Akses dashboard, stok, pesanan, laporan</div>
+        </div>
+      </div>
+      <div class="role-option" id="roleOpt-customer" onclick="switchRole('customer')">
+        <span class="r-icon">🛍️</span>
+        <div>
+          <div class="r-title">Customer</div>
+          <div class="r-desc">Kembali ke halaman pemesanan pelanggan</div>
+        </div>
+      </div>
+    </div>
+    <div style="margin-top:18px;text-align:right;">
+      <button class="btn-cancel" onclick="closeModal('roleModal')" style="border:none;border-radius:10px;padding:10px 22px;font-family:'Nunito',sans-serif;font-weight:800;cursor:pointer;background:#f3f4f6;color:#555;">Tutup</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ===== AUTH GUARD =====
+const currentUser = JSON.parse(localStorage.getItem('dbesto_user') || 'null');
+if (!currentUser || currentUser.role !== 'karyawan') {
+  // Redirect ke login jika bukan karyawan
+  alert('Akses ditolak! Halaman ini khusus karyawan/admin.');
+  window.location.href = 'login.html';
+}
+document.getElementById('topbarName').textContent = currentUser ? currentUser.nama : 'Admin';
+document.getElementById('roleBadge').textContent = currentUser ? (currentUser.role === 'karyawan' ? 'Karyawan' : 'Admin') : 'Admin';
+
+// Date
+const now = new Date();
+document.getElementById('topbarDate').textContent = now.toLocaleDateString('id-ID', { weekday:'long', day:'numeric', month:'long', year:'numeric' });
+
+// ===== STOK DATA =====
+let stokData = JSON.parse(localStorage.getItem('dbesto_stok') || 'null') || [
+  { nama:'Ayam', jumlah:15, satuan:'Kg' },
+  { nama:'Tepung Crispy', jumlah:8, satuan:'Kg' },
+  { nama:'Minyak Goreng', jumlah:0, satuan:'Liter' },
+  { nama:'Roti Burger', jumlah:12, satuan:'Pcs' },
+  { nama:'Kentang', jumlah:3, satuan:'Kg' },
+  { nama:'Patty Burger', jumlah:8, satuan:'Kg' },
+];
+
+function getStokStatus(jml) {
+  if (jml === 0) return { label:'Stok Habis', cls:'badge-red' };
+  if (jml <= 4) return { label:'Stok Menipis', cls:'badge-orange' };
+  return { label:'Stok Aman', cls:'badge-green' };
+}
+
+function renderStok() {
+  const tbody = document.getElementById('stokBody');
+  tbody.innerHTML = stokData.map((s,i) => {
+    const st = getStokStatus(s.jumlah);
+    return `<tr>
+      <td><b>${s.nama}</b></td>
+      <td>${s.jumlah}</td>
+      <td>${s.satuan}</td>
+      <td><span class="badge ${st.cls}">${st.label}</span></td>
+      <td>
+        <div class="action-btns">
+          <button class="btn-icon btn-edit" onclick="editStok(${i})" title="Edit">✏️</button>
+          <button class="btn-icon btn-delete" onclick="deleteStok(${i})" title="Hapus">🗑️</button>
+        </div>
+      </td>
+    </tr>`;
+  }).join('');
+
+  // Notif bar
+  const masalah = stokData.filter(s => s.jumlah <= 4);
+  const notif = document.getElementById('stokNotif');
+  if (masalah.length > 0) {
+    notif.style.display = 'flex';
+    notif.innerHTML = `
+      <div class="notif-left">
+        <span class="notif-icon">⚠️</span>
+        <div>
+          <div class="notif-title">Notifikasi</div>
+          <div class="notif-text">${masalah.map(s=>s.nama+' '+getStokStatus(s.jumlah).label).join(', ')}!</div>
+        </div>
+      </div>
+      <button class="btn-yellow" onclick="showPage('stok',null)">Lihat Detail</button>`;
+  } else {
+    notif.style.display = 'none';
+  }
+}
+
+let deleteIdx = -1;
+function deleteStok(i) { deleteIdx = i; document.getElementById('deleteModal').classList.add('show'); }
+function confirmDelete() {
+  if (deleteIdx >= 0) { stokData.splice(deleteIdx, 1); saveStokToStorage(); renderStok(); }
+  closeModal('deleteModal');
+}
+function editStok(i) {
+  const s = stokData[i];
+  document.getElementById('stokEditIdx').value = i;
+  document.getElementById('stokNama').value = s.nama;
+  document.getElementById('stokJumlah').value = s.jumlah;
+  document.getElementById('stokSatuan').value = s.satuan;
+  document.getElementById('stokModalTitle').textContent = 'Edit Stok';
+  document.getElementById('stokModal').classList.add('show');
+}
+function openAddStok() {
+  document.getElementById('stokEditIdx').value = -1;
+  document.getElementById('stokNama').value = '';
+  document.getElementById('stokJumlah').value = '';
+  document.getElementById('stokSatuan').value = 'Kg';
+  document.getElementById('stokModalTitle').textContent = 'Tambah Stok';
+  document.getElementById('stokModal').classList.add('show');
+}
+function saveStok() {
+  const idx = parseInt(document.getElementById('stokEditIdx').value);
+  const nama = document.getElementById('stokNama').value.trim();
+  const jumlah = parseInt(document.getElementById('stokJumlah').value);
+  const satuan = document.getElementById('stokSatuan').value;
+  if (!nama) { alert('Nama barang harus diisi!'); return; }
+  if (isNaN(jumlah) || jumlah < 0) { alert('Jumlah tidak valid!'); return; }
+  if (idx === -1) stokData.push({ nama, jumlah, satuan });
+  else stokData[idx] = { nama, jumlah, satuan };
+  saveStokToStorage();
+  renderStok();
+  closeModal('stokModal');
+}
+function saveStokToStorage() { localStorage.setItem('dbesto_stok', JSON.stringify(stokData)); }
+
+// ===== PESANAN =====
+let allOrders = [];
+function loadOrders() {
+  // Buat dummy orders + merge dari localStorage jika ada
+  allOrders = JSON.parse(localStorage.getItem('dbesto_orders') || 'null') || [
+    { no:'#DB254026-0001', pelanggan:'Budi Santoso', item:'DADA × 2, Choco Float × 1', total:35000, waktu:'10:00', status:'selesai' },
+    { no:'#DB254026-0002', pelanggan:'Sari Dewi', item:'Combo Kids 2 × 1', total:18500, waktu:'11:30', status:'diproses' },
+    { no:'#DB254026-0003', pelanggan:'Ahmad Fauzi', item:'Honey Chicken × 2', total:25000, waktu:'12:00', status:'menunggu' },
+    { no:'#DB254026-0004', pelanggan:'Rina Kusuma', item:'Paket Hemat 1 × 1', total:28000, waktu:'13:15', status:'selesai' },
+    { no:'#DB254026-0005', pelanggan:'Doni Prasetyo', item:'Chicken Extra × 1', total:73000, waktu:'14:00', status:'menunggu' },
+  ];
+  document.getElementById('dashOrderCount').textContent = allOrders.length;
+  document.getElementById('orderCount').textContent = `Total: ${allOrders.length} pesanan`;
+  renderOrders('semua');
+  renderRecentOrders();
+}
+
+let currentOrderFilter = 'semua';
+function filterOrders(f, btn) {
+  currentOrderFilter = f;
+  document.querySelectorAll('.status-btn').forEach(b => b.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+  renderOrders(f);
+}
+function renderOrders(f) {
+  const filtered = f === 'semua' ? allOrders : allOrders.filter(o => o.status === f);
+  const tbody = document.getElementById('pesananBody');
+  const stMap = { menunggu:{label:'Menunggu',cls:'badge-orange'}, diproses:{label:'Diproses',cls:'badge-blue'}, selesai:{label:'Selesai',cls:'badge-green'} };
+  tbody.innerHTML = filtered.map((o,i) => {
+    const st = stMap[o.status] || {label:o.status, cls:'badge-gray'};
+    return `<tr>
+      <td><b style="color:var(--red);">${o.no}</b></td>
+      <td>${o.pelanggan}</td>
+      <td style="max-width:180px;font-size:12px;">${o.item}</td>
+      <td><b>Rp${o.total.toLocaleString('id')}</b></td>
+      <td>${o.waktu}</td>
+      <td><span class="badge ${st.cls}">${st.label}</span></td>
+      <td>
+        <select onchange="updateOrderStatus(${allOrders.indexOf(o)}, this.value)"
+          style="border:1.5px solid #ddd;border-radius:8px;padding:5px 8px;font-family:'Nunito',sans-serif;font-weight:700;font-size:12px;cursor:pointer;outline:none;">
+          <option value="menunggu" ${o.status==='menunggu'?'selected':''}>Menunggu</option>
+          <option value="diproses" ${o.status==='diproses'?'selected':''}>Diproses</option>
+          <option value="selesai" ${o.status==='selesai'?'selected':''}>Selesai</option>
+        </select>
+      </td>
+    </tr>`;
+  }).join('');
+  if (filtered.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;padding:30px;color:#bbb;font-weight:700;">Tidak ada pesanan</td></tr>`;
+  }
+}
+function updateOrderStatus(i, val) {
+  allOrders[i].status = val;
+  localStorage.setItem('dbesto_orders', JSON.stringify(allOrders));
+  renderOrders(currentOrderFilter);
+  renderRecentOrders();
+}
+
+function renderRecentOrders() {
+  const el = document.getElementById('recentOrders');
+  const stColors = { menunggu:'#d97706', diproses:'#2563eb', selesai:'#16a34a' };
+  el.innerHTML = allOrders.slice(0,4).map(o => `
+    <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid #f5f5f5;">
+      <div>
+        <div style="font-weight:800;font-size:13px;">${o.pelanggan}</div>
+        <div style="font-size:11px;color:#888;">${o.no}</div>
+      </div>
+      <div style="text-align:right;">
+        <div style="font-weight:800;font-size:13px;">Rp${o.total.toLocaleString('id')}</div>
+        <div style="font-size:11px;font-weight:800;color:${stColors[o.status]};">${o.status}</div>
+      </div>
+    </div>`).join('');
+}
+
+// ===== FEEDBACK =====
+function loadFeedback() {
+  const reviews = JSON.parse(localStorage.getItem('dbesto_reviews') || '[]');
+  document.getElementById('dashFbCount').textContent = reviews.length;
+  document.getElementById('repFb').textContent = reviews.length;
+  const avg = reviews.length ? (reviews.reduce((a,r) => a + r.rating, 0) / reviews.length).toFixed(1) : '–';
+  document.getElementById('avgRating').textContent = avg;
+
+  const el = document.getElementById('feedbackAdmin');
+  if (reviews.length === 0) {
+    el.innerHTML = `<div style="text-align:center;padding:40px;color:#bbb;font-weight:700;">Belum ada feedback</div>`;
+    return;
+  }
+  el.innerHTML = reviews.map(r => `
+    <div class="feedback-item">
+      <div>
+        <div class="fb-stars">${'★'.repeat(r.rating)}${'☆'.repeat(5-r.rating)}</div>
+        <div class="fb-name">${r.name}</div>
+        <div class="fb-text">${r.text}</div>
+        <div class="fb-date">${r.date}</div>
+      </div>
+      <span class="badge ${r.rating >= 4 ? 'badge-green' : r.rating >= 3 ? 'badge-orange' : 'badge-red'}">${r.rating}/5</span>
+    </div>`).join('');
+}
+
+// ===== LAPORAN =====
+function loadLaporan() {
+  const orders = JSON.parse(localStorage.getItem('dbesto_orders') || '[]');
+  const realOrders = orders.length ? orders : allOrders;
+  const totalPendapatan = realOrders.reduce((a,o) => a + (o.total||0), 0);
+  document.getElementById('repPendapatan').textContent = 'Rp' + totalPendapatan.toLocaleString('id');
+  document.getElementById('repPesanan').textContent = realOrders.length;
+
+  // Stok table
+  const tbl = document.getElementById('laporanStok');
+  tbl.innerHTML = `<thead><tr><th>Nama Barang</th><th>Jumlah</th><th>Satuan</th><th>Status</th></tr></thead>
+    <tbody>${stokData.map(s => {
+      const st = getStokStatus(s.jumlah);
+      return `<tr><td>${s.nama}</td><td>${s.jumlah}</td><td>${s.satuan}</td><td><span class="badge ${st.cls}">${st.label}</span></td></tr>`;
+    }).join('')}</tbody>`;
+}
+
+// ===== CHART =====
+function renderChart() {
+  const days = ['Sen','Sel','Rab','Kam','Jum','Sab','Min'];
+  const vals = [42, 58, 35, 67, 52, 85, 73];
+  const max = Math.max(...vals);
+  document.getElementById('chartWrap').innerHTML = days.map((d,i) => `
+    <div class="bar-col">
+      <div class="bar-val">Rp${vals[i]}k</div>
+      <div class="bar" style="height:${(vals[i]/max)*100}%;background:${vals[i]===max?'var(--red)':'var(--yellow)'}"></div>
+      <div class="bar-lbl">${d}</div>
+    </div>`).join('');
+}
+
+// ===== DASHBOARD NOTIF =====
+function renderDashNotif() {
+  const masalah = stokData.filter(s => s.jumlah <= 4);
+  const el = document.getElementById('notifBar');
+  if (masalah.length > 0) {
+    el.style.display = 'flex';
+    el.innerHTML = `
+      <div class="notif-left">
+        <span class="notif-icon">⚠️</span>
+        <div>
+          <div class="notif-title">Notifikasi</div>
+          <div class="notif-text">${masalah.map(s=>s.nama+' '+getStokStatus(s.jumlah).label).join(', ')}!</div>
+        </div>
+      </div>
+      <button class="btn-yellow" onclick="showPage('stok',null)">Lihat Detail</button>`;
+  } else {
+    el.style.display = 'none';
+  }
+}
+
+// ===== PAGE NAVIGATION =====
+function showPage(id, el) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.sidebar-menu li a').forEach(a => a.classList.remove('active'));
+  document.getElementById('page-' + id).classList.add('active');
+  const titles = { dashboard:'Dashboard', stok:'Manajemen Stok', pesanan:'Manajemen Pesanan', feedback:'Feedback Pelanggan', laporan:'Laporan', pengaturan:'Pengaturan' };
+  document.getElementById('pageTitle').textContent = titles[id] || id;
+  if (el) el.classList.add('active');
+  // Refresh data per page
+  if (id === 'stok') renderStok();
+  if (id === 'pesanan') loadOrders();
+  if (id === 'feedback') loadFeedback();
+  if (id === 'laporan') loadLaporan();
+  if (id === 'dashboard') { renderDashNotif(); renderRecentOrders(); }
+}
+
+// ===== MODAL =====
+function closeModal(id) { document.getElementById(id).classList.remove('show'); }
+document.querySelectorAll('.modal-overlay').forEach(m => {
+  m.addEventListener('click', e => { if (e.target === m) m.classList.remove('show'); });
+});
+
+// ===== SWITCH ROLE =====
+function openRoleModal() { document.getElementById('roleModal').classList.add('show'); }
+function switchRole(role) {
+  document.querySelectorAll('.role-option').forEach(o => o.classList.remove('selected'));
+  document.getElementById('roleOpt-' + role).classList.add('selected');
+  if (role === 'customer') {
+    // Update user role in localStorage to customer and redirect
+    if (currentUser) {
+      currentUser.role = 'customer';
+      localStorage.setItem('dbesto_user', JSON.stringify(currentUser));
+    }
+    closeModal('roleModal');
+    setTimeout(() => window.location.href = 'index.html', 400);
+  }
+}
+
+function doLogout() {
+  if (confirm('Yakin ingin logout?')) {
+    localStorage.removeItem('dbesto_user');
+    window.location.href = 'login.html';
+  }
+}
+
+// ===== INIT =====
+renderStok();
+renderChart();
+loadOrders();
+loadFeedback();
+renderDashNotif();
+</script>
+</body>
+</html>

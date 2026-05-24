@@ -262,3 +262,15 @@ footer {
   transform: translateY(-4px);
   box-shadow: 0 8px 30px rgba(0,0,0,0.13);
 }
+/* ===== STRUK PAGE ===== */
+.struk-logo {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 8px;
+}
+.struk-logo img {
+  height: 50px;
+  width: auto;
+  object-fit: contain;
+}

@@ -12,16 +12,20 @@
       background: var(--white);
       border-radius: var(--radius);
       box-shadow: var(--shadow);
-      padding: 40px 36px;
+      padding: 32px 28px;
       text-align: center;
     }
     .struk-logo {
-      font-family: 'Poppins', sans-serif;
-      font-size: 28px; font-weight: 900;
-      margin-bottom: 4px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-bottom: 12px;
     }
-    .struk-logo span { color: var(--red); }
-    .struk-sub { font-size: 12px; color: var(--gray-mid); margin-bottom: 16px; }
+    .struk-logo img {
+      height: 70px;
+      width: auto;
+      object-fit: contain;
+    }
     .struk-title {
       background: var(--yellow);
       border-radius: 8px;
@@ -30,24 +34,24 @@
       font-size: 18px; font-weight: 900;
       letter-spacing: 1px;
       display: inline-block;
-      margin-bottom: 20px;
+      margin-bottom: 18px;
     }
     .struk-branch {
       font-size: 14px; font-weight: 700; color: var(--black);
       margin-bottom: 4px;
     }
-    .struk-address { font-size: 13px; color: #777; line-height: 1.5; margin-bottom: 20px; }
+    .struk-address { font-size: 13px; color: #777; line-height: 1.5; margin-bottom: 18px; }
 
     .struk-info {
       border-top: 1px dashed #ddd;
       border-bottom: 1px dashed #ddd;
-      padding: 16px 0;
+      padding: 14px 0;
       text-align: left;
-      margin-bottom: 16px;
+      margin-bottom: 14px;
     }
     .info-row {
       display: flex; justify-content: space-between; align-items: flex-start;
-      margin-bottom: 8px;
+      margin-bottom: 6px;
     }
     .info-row:last-child { margin-bottom: 0; }
     .info-row .key { font-size: 14px; color: #666; font-weight: 600; }
@@ -59,11 +63,11 @@
       border: none; border-radius: 8px; padding: 10px 22px;
       font-family: 'Nunito', sans-serif; font-weight: 800; font-size: 14px;
       cursor: pointer; text-align: left; width: 100%;
-      margin-bottom: 16px;
+      margin-bottom: 14px;
       transition: background 0.2s;
     }
     .btn-detail:hover { background: var(--yellow-dark); }
-    .detail-panel { display: none; text-align: left; margin-bottom: 16px; }
+    .detail-panel { display: none; text-align: left; margin-bottom: 14px; }
     .detail-panel.show { display: block; }
     .detail-item {
       display: flex; justify-content: space-between;
@@ -72,7 +76,7 @@
     .detail-item .d-name { color: #444; font-weight: 600; }
     .detail-item .d-price { font-weight: 800; }
 
-    .struk-calc { text-align: left; margin-bottom: 16px; }
+    .struk-calc { text-align: left; margin-bottom: 14px; }
     .calc-row { display: flex; justify-content: space-between; padding: 6px 0; font-size: 14px; }
     .calc-row .lbl { color: #666; font-weight: 600; }
     .calc-row .val { font-weight: 700; }
@@ -80,7 +84,7 @@
 
     .struk-total {
       display: flex; justify-content: space-between; align-items: center;
-      border-top: 2px solid var(--black); padding-top: 14px; margin-bottom: 20px;
+      border-top: 2px solid var(--black); padding-top: 14px; margin-bottom: 18px;
     }
     .struk-total .lbl { font-family:'Poppins',sans-serif; font-size: 18px; font-weight: 900; }
     .struk-total .amount {
@@ -98,7 +102,7 @@
     .struk-thankyou span { font-size: 24px; }
 
     .print-btn {
-      margin-top: 20px;
+      margin-top: 18px;
       background: var(--black); color: var(--white);
       border: none; border-radius: 10px; padding: 12px 28px;
       font-family: 'Nunito', sans-serif; font-weight: 800; font-size: 15px;
@@ -106,18 +110,23 @@
       transition: background 0.2s;
     }
     .print-btn:hover { background: #333; }
+    
     @media print {
       nav, footer, .print-btn { display: none !important; }
-      .main { max-width: 100%; }
+      .main { max-width: 100%; padding: 0; }
+      .struk { box-shadow: none; border-radius: 0; }
     }
   </style>
 </head>
 <body>
 
+<!-- NAVBAR -->
 <nav>
   <a class="nav-logo" href="index.html">
-    <span style="font-family:'Poppins',sans-serif;font-weight:900;font-size:22px;color:var(--black);">d'Best<span style="font-size:22px;color:var(--red);">O</span></span>
-    <small style="font-size:10px;color:#888;font-weight:600;">Jagonya Rasa</small>
+    <img src="https://files.catbox.moe/ukd7wv.png" 
+         alt="d'BestO Logo" 
+         style="height: 60px; width: auto; object-fit: contain;"
+         onerror="this.src='https://placehold.co/180x60/FFD600/1A1A1A?text=d%27BestO'"/>
   </a>
   <ul class="nav-links">
     <li><a href="index.html">Beranda</a></li>
@@ -128,14 +137,19 @@
     <li><a href="tentang.html">Tentang Kami</a></li>
   </ul>
   <div class="nav-actions">
-    <a class="btn-login" href="login.html">Login</a>
+    <div id="authSection"></div>
   </div>
 </nav>
 
 <div class="main">
   <div class="struk">
-    <div class="struk-logo">d'Best<span>O</span></div>
-    <div class="struk-sub">chicken & burger</div>
+    <!-- LOGO STRUK (70px - Lebih Besar) -->
+    <div class="struk-logo">
+      <img src="https://files.catbox.moe/ukd7wv.png" 
+           alt="d'BestO Logo" 
+           onerror="this.src='https://placehold.co/180x70/FFD600/1A1A1A?text=d%27BestO'"/>
+    </div>
+    <!-- HAPUS: <div class="struk-sub">chicken & burger</div> -->
     <div class="struk-title">STRUK PEMESANAN</div>
     <div class="struk-branch">d'BestO – Cabang Politeknik</div>
     <div class="struk-address">Politeknik 1, Kairagi Dua, Kec. Mapanget, Kota<br/>Manado, Sulawesi Utara</div>
@@ -143,50 +157,37 @@
     <div class="struk-info">
       <div class="info-row">
         <span class="key">No. Order</span>
-        <span class="val order-no">#DB254026-0012</span>
+        <span class="val order-no" id="orderNo">#DB254026-0012</span>
       </div>
       <div class="info-row">
         <span class="key">Tanggal & Waktu</span>
-        <span class="val">26 April 2026 / 17:20 WIB</span>
+        <span class="val" id="orderDateTime">26 April 2026 / 17:20 WITA</span>
       </div>
       <div class="info-row">
         <span class="key">Kasir</span>
-        <span class="val">Regina</span>
+        <span class="val" id="orderKasir">Regina</span>
       </div>
       <div class="info-row">
         <span class="key">Metode Pembayaran</span>
-        <span class="val">Tunai</span>
+        <span class="val" id="orderPayment">Tunai</span>
       </div>
     </div>
 
     <button class="btn-detail" onclick="toggleDetail()">📋 LIHAT DETAIL PEMESANAN</button>
-    <div class="detail-panel" id="detailPanel">
-      <div class="detail-item">
-        <span class="d-name">Chicken Box Lada Hitam × 4</span>
-        <span class="d-price">Rp54,000</span>
-      </div>
-      <div class="detail-item">
-        <span class="d-name">Apel Flazz × 2</span>
-        <span class="d-price">Rp17,000</span>
-      </div>
-      <div class="detail-item">
-        <span class="d-name">DADA × 1</span>
-        <span class="d-price">Rp12,000</span>
-      </div>
-    </div>
+    <div class="detail-panel" id="detailPanel"></div>
 
     <div class="struk-calc">
-      <div class="calc-row"><span class="lbl">Subtotal</span><span class="val">Rp62,000</span></div>
-      <div class="calc-row"><span class="lbl">Diskon</span><span class="val discount">-Rp4,000</span></div>
-      <div class="calc-row"><span class="lbl">Pajak (10%)</span><span class="val">Rp5,800</span></div>
+      <div class="calc-row"><span class="lbl">Subtotal</span><span class="val" id="calcSubtotal">Rp62,000</span></div>
+      <div class="calc-row"><span class="lbl">Diskon</span><span class="val discount" id="calcDiskon">-Rp4,000</span></div>
+      <div class="calc-row"><span class="lbl">Pajak (10%)</span><span class="val" id="calcPajak">Rp5,800</span></div>
     </div>
 
     <div class="struk-total">
       <span class="lbl">TOTAL</span>
-      <span class="amount">Rp63,800</span>
+      <span class="amount" id="totalFinal">Rp63,800</span>
     </div>
 
-    <div class="struk-thankyou">
+    <div class="struk-thankyou" id="thankYouMsg">
       <span>😊</span>
       Terima kasih telah memesan di d'BestO!
       <span>😊</span>
@@ -232,20 +233,67 @@
 </footer>
 
 <script>
+// === AUTH SYSTEM (Hanya Icon User 👤) ===
+function checkAuth() {
+  const user = JSON.parse(localStorage.getItem('dbesto_user') || 'null');
+  const authSection = document.getElementById('authSection');
+  
+  if (user) {
+    // User sudah login - tampilkan icon user saja
+    authSection.innerHTML = `
+      <div style="position:relative;cursor:pointer;" onclick="showUserMenu()" id="userIcon" title="Menu Pengguna">
+        <div style="font-size:28px;">👤</div>
+      </div>
+      <div id="userMenu" style="display:none;position:fixed;top:70px;right:20px;background:white;border-radius:12px;box-shadow:0 10px 40px rgba(0,0,0,0.15);padding:12px 0;min-width:180px;z-index:1000;">
+        <div style="padding:8px 16px;border-bottom:1px solid #f0f0f0;">
+          <div style="font-weight:800;font-size:14px;color:#333;">${user.nama}</div>
+          <div style="font-size:12px;color:#888;">${user.email}</div>
+        </div>
+        <a href="profile.html" style="display:block;padding:10px 16px;color:#333;text-decoration:none;font-size:14px;font-weight:600;">👤 Profil Saya</a>
+        <a href="order.html" style="display:block;padding:10px 16px;color:#333;text-decoration:none;font-size:14px;font-weight:600;">📦 Pesanan Saya</a>
+        <hr style="margin:8px 0;border:none;border-top:1px solid #f0f0f0;"/>
+        <a href="#" onclick="logout();return false;" style="display:block;padding:10px 16px;color:#e02020;text-decoration:none;font-size:14px;font-weight:700;">🚪 Logout</a>
+      </div>
+    `;
+  } else {
+    // User belum login - tampilkan icon user saja
+    authSection.innerHTML = `
+      <a href="login.html" style="font-size:28px;text-decoration:none;" title="Login">👤</a>
+    `;
+  }
+}
+function showUserMenu() {
+  const menu = document.getElementById('userMenu');
+  menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
+}
+function logout() {
+  if (confirm('Yakin ingin logout?')) {
+    localStorage.removeItem('dbesto_user');
+    location.reload();
+  }
+}
+document.addEventListener('click', function(e) {
+  const userIcon = document.getElementById('userIcon');
+  const userMenu = document.getElementById('userMenu');
+  if (userMenu && !userIcon?.contains(e.target)) {
+    userMenu.style.display = 'none';
+  }
+});
+checkAuth();
+
+// === STRUK FUNCTIONS ===
 function toggleDetail() {
   const panel = document.getElementById('detailPanel');
   panel.classList.toggle('show');
 }
 
-// Baca data order
+// Load order data
 const order = JSON.parse(localStorage.getItem('dbesto_order') || 'null');
-if (order) {
-  // No. Order & info
-  document.querySelector('.info-row:nth-child(1) .val').textContent = order.orderNo;
-  document.querySelector('.info-row:nth-child(2) .val').textContent =
-    order.date + ' / ' + order.time + ' WITA';
 
-  // Detail item
+if (order) {
+  document.getElementById('orderNo').textContent = order.orderNo;
+  document.getElementById('orderDateTime').textContent = order.date + ' / ' + order.time + ' WITA';
+  
   const panel = document.getElementById('detailPanel');
   panel.innerHTML = order.cart.map(item => `
     <div class="detail-item">
@@ -254,23 +302,22 @@ if (order) {
     </div>
   `).join('');
 
-  // Kalkulasi
   const subtotal = order.total;
   const diskon = 0;
   const pajak = 0;
   const totalAkhir = subtotal - diskon + pajak;
 
-  document.querySelector('.calc-row:nth-child(1) .val').textContent = 'Rp' + subtotal.toLocaleString('id');
-  document.querySelector('.calc-row:nth-child(2) .val').textContent = diskon > 0 ? '-Rp' + diskon.toLocaleString('id') : 'Rp0';
-  document.querySelector('.calc-row:nth-child(3) .val').textContent = 'Rp' + pajak.toLocaleString('id');
-  document.querySelector('.struk-total .amount').textContent = 'Rp' + totalAkhir.toLocaleString('id');
+  document.getElementById('calcSubtotal').textContent = 'Rp' + subtotal.toLocaleString('id');
+  document.getElementById('calcDiskon').textContent = diskon > 0 ? '-Rp' + diskon.toLocaleString('id') : 'Rp0';
+  document.getElementById('calcPajak').textContent = 'Rp' + pajak.toLocaleString('id');
+  document.getElementById('totalFinal').textContent = 'Rp' + totalAkhir.toLocaleString('id');
 
-  // Pesan terima kasih dengan nama
-  document.querySelector('.struk-thankyou').innerHTML =
+  document.getElementById('thankYouMsg').innerHTML =
     `<span>😊</span> Terima kasih, ${order.nama}! Pesananmu sedang dipersiapkan. <span>😊</span>`;
 
-  // Hapus cart setelah struk dibuka
   localStorage.removeItem('dbesto_cart');
+} else {
+  document.getElementById('detailPanel').innerHTML = '<div style="color:#888;font-size:13px;padding:10px;">Tidak ada data pesanan.</div>';
 }
 </script>
 </body>

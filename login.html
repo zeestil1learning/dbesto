@@ -168,8 +168,15 @@
     .btn-google:hover { border-color: #aaa; box-shadow: 0 2px 10px rgba(0,0,0,0.08); }
 
     .form-note { font-size: 12px; color: #bbb; text-align: center; margin-top: 12px; }
-    .form-note a { color: var(--red); font-weight: 700; text-decoration: none; }
+    .form-note a { color: var(--red); font-weight: 700; text-decoration: none; cursor: pointer; }
     .form-note a:hover { text-decoration: underline; }
+
+    .terms {
+      display: flex; align-items: flex-start; gap: 8px;
+      font-size: 12px; color: #777; margin-bottom: 16px;
+    }
+    .terms input { margin-top: 2px; flex-shrink: 0; accent-color: var(--red); }
+    .terms a { color: var(--red); font-weight: 700; text-decoration: none; }
 
     .error-msg {
       background: #fff0f0; border: 1px solid #fcc; color: var(--red);
@@ -185,20 +192,23 @@
     }
     .success-msg.show { display: block; }
 
-    .terms {
-      display: flex; align-items: flex-start; gap: 8px;
-      font-size: 12px; color: #777; margin-bottom: 16px;
+    /* Responsive */
+    @media (max-width: 768px) {
+      .auth-card { flex-direction: column; width: 95%; }
+      .auth-left { width: 100%; padding: 30px 20px; }
+      .auth-right { padding: 30px 20px; }
     }
-    .terms input { margin-top: 2px; flex-shrink: 0; accent-color: var(--red); }
-    .terms a { color: var(--red); font-weight: 700; text-decoration: none; }
   </style>
 </head>
 <body>
 
-<nav style="background:var(--white);">
+<!-- NAVBAR (FIXED - Tidak ada class active) -->
+<nav>
   <a class="nav-logo" href="index.html">
-    <span style="font-family:'Poppins',sans-serif;font-weight:900;font-size:22px;color:var(--black);">d'Best<span style="font-size:22px;color:var(--red);">O</span></span>
-    <small style="font-size:10px;color:#888;font-weight:600;">Jagonya Rasa</small>
+    <img src="https://files.catbox.moe/ukd7wv.png" 
+         alt="d'BestO Logo" 
+         style="height: 60px; width: auto; object-fit: contain;"
+         onerror="this.src='https://placehold.co/180x60/FFD600/1A1A1A?text=d%27BestO'"/>
   </a>
   <ul class="nav-links">
     <li><a href="index.html">Beranda</a></li>
@@ -208,7 +218,10 @@
     <li><a href="feedback.html">Feedback</a></li>
     <li><a href="tentang.html">Tentang Kami</a></li>
   </ul>
-  <div class="nav-actions"></div>
+  <div class="nav-actions">
+    <a class="cart-icon" href="order.html">🛒<span class="cart-badge" id="navCartBadge">0</span></a>
+    <a class="user-icon" href="login.html">👤</a>
+  </div>
 </nav>
 
 <div class="auth-container">
@@ -218,17 +231,18 @@
       <div class="auth-brand">d'Best<span>O</span></div>
       <div class="auth-tagline">Jagonya Rasa</div>
       <div class="auth-left-img">🍗</div>
-      <p>Masuk atau daftar untuk menikmati promo eksklusif dan kemudahan pre-order!</p>
+      <p id="leftDesc">Masuk atau daftar untuk menikmati promo eksklusif dan kemudahan pre-order!</p>
     </div>
 
     <!-- Right -->
     <div class="auth-right">
       <div class="auth-tabs">
-        <button class="auth-tab active" onclick="switchTab('login')">Masuk</button>
+        <button class="auth-tab active" onclick="switchTab('login')">Customer</button>
         <button class="auth-tab" onclick="switchTab('register')">Daftar</button>
+        <button class="auth-tab" onclick="switchTab('karyawan')" style="color:#d97706;">🔧 Karyawan</button>
       </div>
 
-      <!-- LOGIN -->
+      <!-- LOGIN FORM -->
       <div class="auth-form show" id="formLogin">
         <div class="error-msg" id="loginError"></div>
         <div class="success-msg" id="loginSuccess"></div>
@@ -256,7 +270,7 @@
         <div class="form-note">Belum punya akun? <a onclick="switchTab('register')">Daftar sekarang</a></div>
       </div>
 
-      <!-- REGISTER -->
+      <!-- REGISTER FORM -->
       <div class="auth-form" id="formRegister">
         <div class="error-msg" id="registerError"></div>
         <div class="success-msg" id="registerSuccess"></div>
@@ -304,6 +318,41 @@
         <button class="btn-auth" onclick="doRegister()">Daftar Sekarang</button>
         <div class="form-note">Sudah punya akun? <a onclick="switchTab('login')">Masuk</a></div>
       </div>
+
+      <!-- KARYAWAN LOGIN FORM -->
+      <div class="auth-form" id="formKaryawan">
+        <div style="background:#fffbea;border:1.5px solid var(--yellow);border-radius:12px;padding:12px 16px;margin-bottom:16px;display:flex;align-items:center;gap:10px;">
+          <span style="font-size:20px;">🔧</span>
+          <div>
+            <div style="font-weight:800;font-size:13px;color:#92400e;">Mode Manajemen / Karyawan</div>
+            <div style="font-size:12px;color:#b45309;">Gunakan akun karyawan yang diberikan oleh admin</div>
+          </div>
+        </div>
+        <div class="error-msg" id="karyawanError"></div>
+        <div class="success-msg" id="karyawanSuccess"></div>
+        <div class="form-group">
+          <label>ID Karyawan / Email</label>
+          <div class="input-wrap">
+            <span class="ico">🔧</span>
+            <input type="text" id="karyawanId" placeholder="ID atau email karyawan"/>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Password</label>
+          <div class="input-wrap">
+            <span class="ico">🔒</span>
+            <input type="password" id="karyawanPass" placeholder="Password karyawan"/>
+            <span class="toggle-pass" onclick="togglePwd('karyawanPass', this)">👁️</span>
+          </div>
+        </div>
+        <button class="btn-auth" style="background:#d97706;" onclick="doKaryawanLogin()">Masuk sebagai Karyawan</button>
+        <div style="text-align:center;margin-top:10px;">
+          <div style="font-size:12px;color:#bbb;font-weight:600;margin-bottom:6px;">— Demo credentials —</div>
+          <div style="font-size:12px;color:#888;font-weight:700;background:#f9f9f9;border-radius:8px;padding:8px 12px;">
+            ID: <b>admin@dbesto.com</b> &nbsp;|&nbsp; Pass: <b>admin123</b>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </div>
@@ -341,48 +390,132 @@
 </footer>
 
 <script>
+// === AUTH SYSTEM FOR NAVBAR ===
+function updateNavAuth() {
+  const user = JSON.parse(localStorage.getItem('dbesto_user') || 'null');
+  const cartBadge = document.getElementById('navCartBadge');
+  const cart = JSON.parse(localStorage.getItem('dbesto_cart') || '[]');
+  if (cartBadge) cartBadge.textContent = cart.reduce((a,b) => a + b.qty, 0);
+}
+
+// === TAB SWITCHING ===
 function switchTab(tab) {
-  document.querySelectorAll('.auth-tab').forEach((t, i) => {
-    t.classList.toggle('active', (i === 0 && tab === 'login') || (i === 1 && tab === 'register'));
-  });
+  const tabs = document.querySelectorAll('.auth-tab');
+  tabs[0].classList.toggle('active', tab === 'login');
+  tabs[1].classList.toggle('active', tab === 'register');
+  tabs[2].classList.toggle('active', tab === 'karyawan');
+  
   document.getElementById('formLogin').classList.toggle('show', tab === 'login');
   document.getElementById('formRegister').classList.toggle('show', tab === 'register');
+  document.getElementById('formKaryawan').classList.toggle('show', tab === 'karyawan');
+
+  // Update left panel text
+  const desc = {
+    login: 'Masuk atau daftar untuk menikmati promo eksklusif dan kemudahan pre-order!',
+    register: 'Daftar sekarang dan dapatkan notifikasi promo terbaru dari d\'BestO!',
+    karyawan: 'Mode khusus karyawan & manajemen d\'BestO. Akses dashboard, stok, pesanan, dan laporan.',
+  };
+  document.getElementById('leftDesc').textContent = desc[tab];
+  
+  // Clear error/success messages
+  document.querySelectorAll('.error-msg, .success-msg').forEach(el => {
+    el.classList.remove('show');
+  });
 }
 
+// === TOGGLE PASSWORD ===
 function togglePwd(id, btn) {
   const input = document.getElementById(id);
-  if (input.type === 'password') { input.type = 'text'; btn.textContent = '🙈'; }
-  else { input.type = 'password'; btn.textContent = '👁️'; }
+  if (input.type === 'password') { 
+    input.type = 'text'; 
+    btn.textContent = '🙈'; 
+  } else { 
+    input.type = 'password'; 
+    btn.textContent = '👁️'; 
+  }
 }
 
+// === SHOW ERROR/SUCCESS ===
 function showError(id, msg) {
   const el = document.getElementById(id);
-  el.textContent = msg; el.classList.add('show');
+  el.textContent = msg; 
+  el.classList.add('show');
   setTimeout(() => el.classList.remove('show'), 4000);
 }
+
 function showSuccess(id, msg) {
   const el = document.getElementById(id);
-  el.textContent = msg; el.classList.add('show');
+  el.textContent = msg; 
+  el.classList.add('show');
 }
 
+// === CUSTOMER LOGIN ===
 function doLogin() {
   const id = document.getElementById('loginId').value.trim();
   const pass = document.getElementById('loginPass').value;
+  
   if (!id) { showError('loginError', '⚠️ Email atau nomor WA harus diisi!'); return; }
   if (!pass) { showError('loginError', '⚠️ Password harus diisi!'); return; }
 
-  // Check from localStorage
+  // Check demo users first
+  const demoUsers = {
+    'customer@dbesto.com': { password: 'customer123', nama: 'Budi Santoso', email: 'customer@dbesto.com', role: 'customer', phone: '0812-3456-7890' }
+  };
+  
+  if (demoUsers[id] && demoUsers[id].password === pass) {
+    localStorage.setItem('dbesto_user', JSON.stringify(demoUsers[id]));
+    showSuccess('loginSuccess', `✅ Selamat datang, ${demoUsers[id].nama}! Mengalihkan...`);
+    setTimeout(() => window.location.href = 'index.html', 1500);
+    return;
+  }
+
+  // Check registered users
   const users = JSON.parse(localStorage.getItem('dbesto_users') || '[]');
-  const user = users.find(u => (u.email === id || u.wa === id) && u.password === pass);
+  const user = users.find(u => (u.email === id || u.wa === id) && u.password === pass && u.role !== 'karyawan');
+  
   if (!user) {
     showError('loginError', '❌ Email/WA atau password salah. Periksa kembali!');
     return;
   }
+  
+  user.role = 'customer';
   localStorage.setItem('dbesto_user', JSON.stringify(user));
   showSuccess('loginSuccess', `✅ Selamat datang, ${user.nama}! Mengalihkan...`);
   setTimeout(() => window.location.href = 'index.html', 1500);
 }
 
+// === KARYAWAN LOGIN ===
+function doKaryawanLogin() {
+  const id = document.getElementById('karyawanId').value.trim();
+  const pass = document.getElementById('karyawanPass').value;
+  
+  if (!id) { showError('karyawanError', '⚠️ ID karyawan harus diisi!'); return; }
+  if (!pass) { showError('karyawanError', '⚠️ Password harus diisi!'); return; }
+
+  // Built-in admin credential
+  if (id === 'admin@dbesto.com' && pass === 'admin123') {
+    const adminUser = { nama:'Admin d\'BestO', email:'admin@dbesto.com', role:'admin', phone:'0812-9999-8888' };
+    localStorage.setItem('dbesto_user', JSON.stringify(adminUser));
+    showSuccess('karyawanSuccess', '✅ Login berhasil! Mengalihkan ke dashboard...');
+    setTimeout(() => window.location.href = 'admin-dashboard.html', 1500);
+    return;
+  }
+  
+  // Check karyawan accounts
+  const users = JSON.parse(localStorage.getItem('dbesto_users') || '[]');
+  const user = users.find(u => (u.email === id) && u.password === pass && u.role === 'karyawan');
+  
+  if (!user) {
+    showError('karyawanError', '❌ ID/password salah atau bukan akun karyawan!');
+    return;
+  }
+  
+  localStorage.setItem('dbesto_user', JSON.stringify(user));
+  showSuccess('karyawanSuccess', `✅ Selamat datang, ${user.nama}! Mengalihkan...`);
+  setTimeout(() => window.location.href = 'karyawan-dashboard.html', 1500);
+}
+
+// === REGISTER ===
 function doRegister() {
   const nama = document.getElementById('regNama').value.trim();
   const email = document.getElementById('regEmail').value.trim();
@@ -400,13 +533,22 @@ function doRegister() {
   if (!terms) { showError('registerError', '⚠️ Setujui syarat & ketentuan terlebih dahulu!'); return; }
 
   const users = JSON.parse(localStorage.getItem('dbesto_users') || '[]');
-  if (users.find(u => u.email === email)) { showError('registerError', '❌ Email sudah terdaftar!'); return; }
+  if (users.find(u => u.email === email)) { 
+    showError('registerError', '❌ Email sudah terdaftar!'); 
+    return; 
+  }
 
-  users.push({ nama, email, wa, password: pass });
+  users.push({ nama, email, wa, password: pass, role: 'customer' });
   localStorage.setItem('dbesto_users', JSON.stringify(users));
-  showSuccess('registerSuccess', `✅ Akun berhasil dibuat! Silakan masuk.`);
+  
+  showSuccess('registerSuccess', '✅ Akun berhasil dibuat! Silakan masuk.');
   setTimeout(() => switchTab('login'), 2000);
 }
+
+// === INIT ===
+document.addEventListener('DOMContentLoaded', function() {
+  updateNavAuth();
+});
 </script>
 </body>
 </html>

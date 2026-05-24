@@ -134,6 +134,8 @@
       color: var(--white);
       overflow: hidden;
       position: relative;
+      height: 150px;
+      overflow: hidden;
     }
     .promo-badge {
       color: var(--yellow);
@@ -150,18 +152,20 @@
     .promo-price { color: var(--yellow); font-size: 20px; font-weight: 900; }
     .promo-price s { color: #888; font-size: 14px; margin-left: 8px; }
     .promo-img {
-      height: 110px;
+      height: 200px;
       object-fit: contain;
     }
   </style>
 </head>
 <body>
 
-<!-- NAVBAR -->
+<!-- NAVBAR (Logo diperbesar) -->
 <nav>
   <a class="nav-logo" href="index.html">
-    <span style="font-family:'Poppins',sans-serif;font-weight:900;font-size:22px;color:var(--black);">d'Best<span style="font-size:22px;color:var(--red);">O</span></span>
-    <small style="font-size:10px;color:#888;font-weight:600;">Jagonya Rasa</small>
+    <img src="https://files.catbox.moe/ukd7wv.png" 
+         alt="d'BestO Logo" 
+         style="height: 60px; width: auto; object-fit: contain;"
+         onerror="this.src='https://placehold.co/180x60/FFD600/1A1A1A?text=d%27BestO'"/>
   </a>
   <ul class="nav-links">
     <li><a href="index.html" class="active">Beranda</a></li>
@@ -218,7 +222,7 @@
     </div>
   </div>
   <div class="feature-item">
-    <div class="feature-icon">⚡</div>
+    <div class="feature-icon">🕓</div>
     <div>
       <h3>Pelayanan Cepat</h3>
       <p>Siap tersaji dengan cepat untukmu</p>
@@ -271,3 +275,10 @@
     <a class="soc-fb" href="https://web.facebook.com/dbestoIndonesia"><i class="fab fa-facebook-f"></i></a>
   </div>
 </footer>
+
+<script>
+const cart = JSON.parse(localStorage.getItem('dbesto_cart') || '[]');
+document.getElementById('navCartBadge').textContent = cart.reduce((a,b)=>a+b.qty,0);
+</script>
+</body>
+</html>

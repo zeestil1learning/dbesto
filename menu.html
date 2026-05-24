@@ -97,11 +97,13 @@
 </head>
 <body>
 
-<!-- NAVBAR -->
+<!-- NAVBAR (Dengan Logo Gambar) -->
 <nav>
   <a class="nav-logo" href="index.html">
-    <span style="font-family:'Poppins',sans-serif;font-weight:900;font-size:22px;color:var(--black);">d'Best<span style="font-size:22px;color:var(--red);">O</span></span>
-    <small style="font-size:10px;color:#888;font-weight:600;">Jagonya Rasa</small>
+    <img src="https://files.catbox.moe/ukd7wv.png" 
+         alt="d'BestO Logo" 
+         style="height: 60px; width: auto; object-fit: contain;"
+         onerror="this.src='https://placehold.co/180x60/FFD600/1A1A1A?text=d%27BestO'"/>
   </a>
   <ul class="nav-links">
     <li><a href="index.html">Beranda</a></li>
@@ -225,7 +227,7 @@ function addToCart(id) {
   const item = menuData.find(m => m.id === id);
   const existing = cart.find(c => c.id === id);
   if (existing) existing.qty++;
-  else cart.push({ ...item, qty: 1 });
+  else cart.push({ id: item.id, name: item.name, price: item.price, img: item.img, qty: 1 });
   localStorage.setItem('dbesto_cart', JSON.stringify(cart));
   updateCartBadge();
   showToast();
